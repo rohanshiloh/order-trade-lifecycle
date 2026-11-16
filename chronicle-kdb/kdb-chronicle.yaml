@@ -1,0 +1,88 @@
+---
+# Warp launch configuration — Chronicle Queue → kdb+
+#
+#   Save to  ~/.warp/launch_configurations/kdb-chronicle.yaml
+#   Open via Command Palette → Launch Configuration → kdb-chronicle
+#
+# Run ./setup.sh first: it clones DataIntellectTech/kdb-chronicle-queue and
+# rewrites the Windows paths in the bundled application.properties.
+#
+# Start order matters. The adapter connects to kdb+ *before* it opens the
+# queue, and a tailer cannot open a queue directory that does not exist yet,
+# so the Producer has to have appended at least once. The sleeps buy each
+# process the time to find what it depends on instead of racing it.
+#
+# Companion paper: https://rohanshiloh.github.io/order-trade-lifecycle/#chronicle-kdb
+
+name: kdb-chronicle
+windows:
+  - tabs:
+
+      # 1 — kdb+ first. dummytp.q loads schemachecker.q and declares the
+      #     quote and trade tables the adapter writes into.
+      - title: KDB
+        color: magenta
+        layout:
+          cwd: ~/code/kdb-chronicle-queue/kdb
+          commands:
+            - exec: q dummytp.q -p 5000
+
+      # 2 — Producer: Spring Boot on :9090. Creates the queue directory on
+      #     its first append, so nothing may tail before this is up.
+      - title: PRODUCER
+        color: green
+        layout:
+          cwd: ~/code/kdb-chronicle-queue/Producer
+          commands:
+            - exec: sleep 3; ./mvnw -q spring-boot:run
+
+      # 3 — Adapter: named tailer → MapStruct map → envelope → .u.upd.
+      - title: ADAPTER
+        color: blue
+        layout:
+          cwd: ~/code/kdb-chronicle-queue/Adapter
+          commands:
+            - exec: sleep 12; ./mvnw -q spring-boot:run
+
+      # 4 — Drive the Producer. Swagger is the documented route; curl is
+      #     quicker. Dropping STOP.txt shuts the adapter down gracefully.
+      - title: LOAD
+        color: yellow
+        layout:
+          cwd: ~/code/kdb-chronicle-queue
+          commands:
+            - exec: |
+                sleep 18
+                echo "Swagger : http://localhost:9090/producer/swagger-ui.html"
+                echo
+                echo "start   : curl -X POST 'http://localhost:9090/producer/quoteLoader?noOfMsgs=1000&gap=0&repeatMs=2000'"
+                echo "stop    : touch \"$HOME/ChronicleQueue/Producer/quote/STOP.txt\""
+                echo "resume  : rm -f \"$HOME/ChronicleQueue/Producer/quote/STOP.txt\"  # then restart the ADAPTER tab"
+                echo
+                exec $SHELL
+
+      # 5 — Watch rows land. Focused on open: this is where you type.
+      - title: CTRL
+        color: cyan
+        focus: true
+        layout:
+          cwd: ~/code/kdb-chronicle-queue/kdb
+          commands:
+            - exec: |
+                sleep 22
+                cat <<'EOF'
+                h:hopen `::5000
+
+                h"count quote"                                  / rows arriving
+                h"-10#quote"                                    / the tail
+                h"select cnt:count i by sym from quote"         / shard check
+
+                / end-to-end latency, queue append -> kdb+ insert, in ns.
+                / chrontime is stamped by the Producer, time by kdb+ on insert.
+                h"select avg (`long$time) - `long$chrontime from quote"
+
+                / same, bucketed - watch the shape change when you move
+                / kdb.envelope.size in Adapter/src/main/resources/application.properties
+                h"select avg (`long$time) - `long$chrontime by 1 xbar time.minute from quote"
+                EOF
+                q

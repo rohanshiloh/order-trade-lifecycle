@@ -16,7 +16,7 @@ nothing fetched at runtime.
 | 1 | [The lifecycle at a glance](https://rohanshiloh.github.io/order-trade-lifecycle/#overview) | The two lifecycles, and the seam between them |
 | 2 | [Market structure](https://rohanshiloh.github.io/order-trade-lifecycle/#structure) | Big Bang to T+1 — why the lifecycle has the shape it does |
 | 3 | [The OMS](https://rohanshiloh.github.io/order-trade-lifecycle/#oms) | Parent orders, compliance, allocation, attribution |
-| 4 | [The EMS](https://rohanshiloh.github.io/order-trade-lifecycle/#ems) | [Execution stack](https://rohanshiloh.github.io/order-trade-lifecycle/#execution-stack) · [routing](https://rohanshiloh.github.io/order-trade-lifecycle/#routing) · [benchmarks](https://rohanshiloh.github.io/order-trade-lifecycle/#analytics) · [markouts](https://rohanshiloh.github.io/order-trade-lifecycle/#markouts) |
+| 4 | [The EMS](https://rohanshiloh.github.io/order-trade-lifecycle/#ems) | [Execution stack](https://rohanshiloh.github.io/order-trade-lifecycle/#execution-stack) · [routing](https://rohanshiloh.github.io/order-trade-lifecycle/#routing) · [benchmarks](https://rohanshiloh.github.io/order-trade-lifecycle/#benchmarks) · [markouts](https://rohanshiloh.github.io/order-trade-lifecycle/#markouts) |
 | 5 | [FIX](https://rohanshiloh.github.io/order-trade-lifecycle/#fix) | The protocol fabric, and the [order state machine](https://rohanshiloh.github.io/order-trade-lifecycle/#state-machine) |
 | 6 | [Post-trade](https://rohanshiloh.github.io/order-trade-lifecycle/#post-trade) | Allocation, affirmation, clearing, settlement finality |
 | 7 | [Chronicle](https://rohanshiloh.github.io/order-trade-lifecycle/#chronicle) | The in-band path at wire speed |
@@ -42,7 +42,10 @@ builds a running tick stack in q/kdb+ that measures it — a tickerplant, a chai
 every benchmark derived from raw events by one `aj` or one `select … by`.
 
 Start there with [Ten Ways to Get This Wrong](https://rohanshiloh.github.io/exec-tca-stack/#mistakes) and
-[Five Rules](https://rohanshiloh.github.io/exec-tca-stack/#five-rules).
+[Five Rules](https://rohanshiloh.github.io/exec-tca-stack/#rules).
+
+The two documents share an anchor vocabulary, so `#markouts`, `#benchmarks` and `#fig-markouts` land on the
+same subject in either one.
 
 ## Local
 

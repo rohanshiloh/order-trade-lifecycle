@@ -59,6 +59,8 @@
     letter-spacing: .1em; font-size: .78rem;
     color: var(--accent); margin-right: .45rem;
   }
+  .byline a { font-style: normal; font-family: var(--mono); font-size: .78rem; }
+  .byline .dom { color: var(--ink-faint); }
   h2 {
     font-family: var(--display);
     font-weight: 400; font-style: italic; font-size: 1.75rem;
@@ -198,6 +200,46 @@
   }
   hr { border: none; border-top: 1px solid var(--rule); margin: 3rem 0; width: 30%; margin-left: 0; }
 
+  /* ---- numbered run steps ---- */
+  .step { display: flex; gap: .9rem; margin: 1.5rem 0; align-items: baseline; }
+  .step .num {
+    flex: 0 0 auto; font-family: var(--mono); font-size: .8rem;
+    color: var(--accent); border: 1px solid #4a3a20; border-radius: 3px;
+    padding: .12em .42em; letter-spacing: .04em;
+  }
+  .step .body { flex: 1 1 auto; min-width: 0; }
+  .step .body h4 {
+    margin: 0 0 .3rem; font-family: var(--display); font-style: italic;
+    font-weight: 400; font-size: 1.12rem; color: var(--ink);
+  }
+  .step .body p { margin: 0 0 .5rem; font-size: .92rem; }
+  .step .body pre { margin: .4rem 0 0; font-size: .76rem; }
+
+  /* ---- collapsible code ---- */
+  details.fold {
+    border: 1px solid var(--rule); border-radius: 5px;
+    background: var(--bg2); margin: 1.3rem 0;
+  }
+  details.fold > summary {
+    cursor: pointer; list-style: none;
+    padding: .55rem .9rem; font-size: .84rem;
+    color: var(--accent); font-variant: small-caps; letter-spacing: .06em;
+    display: flex; align-items: baseline; gap: .5rem;
+  }
+  details.fold > summary::-webkit-details-marker { display: none; }
+  details.fold > summary::before { content: "▸"; font-size: .7rem; color: var(--ink-faint); }
+  details.fold[open] > summary::before { content: "▾"; }
+  details.fold > summary .meta {
+    margin-left: auto; font-variant: normal; letter-spacing: 0;
+    color: var(--ink-faint); font-size: .76rem; font-family: var(--mono);
+  }
+  details.fold > summary:hover { color: var(--ink); }
+  details.fold pre { margin: 0; border: none; border-top: 1px solid var(--rule); border-radius: 0; }
+
+  /* ---- concept diagrams: main column, alongside the floated margin boxes ---- */
+  figure.cfig { margin: 1.1rem 0 1.4rem; clear: none; }
+  figure.cfig figcaption { font-size: .76rem; margin-top: .35rem; max-width: none; }
+
   .refs { font-size: .88rem; line-height: 1.6; }
   .refs p { margin: 0 0 .75rem; padding-left: 1.6rem; text-indent: -1.6rem; text-align: left; }
   .refs .au { font-variant: small-caps; letter-spacing: .04em; }
@@ -221,7 +263,8 @@
 <p class="subtitle">How an intention becomes a settled trade: through the OMS, the EMS, and the FIX wire to
 clearing and finality — then rebuilt as software, on Chronicle's microsecond queues and a real-time q/kdb+
 tickerplant</p>
-<p class="byline"><span class="role">Editor</span>Rohan Shiloh Shah</p>
+<p class="byline"><span class="role">Editor</span>Rohan Shiloh Shah ·
+<a href="https://rohanshiloh.github.io/order-trade-lifecycle/"><span class="dom">rohanshiloh.github.io/</span>order-trade-lifecycle</a></p>
 
 <div class="companion">
 <span class="cp-title">Companion volume</span>
@@ -461,7 +504,9 @@ have created an industry.</span>
 <p>A single instrument no longer trades in one place. A liquid U.S. equity has quotes resting simultaneously on
 a dozen-plus lit exchanges and prints crossing in thirty-odd dark venues, each with its own fee schedule,
 matching rules, and latency to your data centre. "The price" is therefore a construction — the national best
-bid and offer, assembled from feeds that arrive at different moments. Fragmentation is the reason the smart
+bid and offer, assembled from feeds that arrive at different moments — and <a href="https://rohanshiloh.github.io/exec-tca-stack/#nbbo">reconstructing it
+faithfully</a> is harder than it sounds, since a venue quoting through the NBBO would otherwise set its own
+benchmark. Fragmentation is the reason the smart
 order router exists, the reason latency became an execution variable rather than an infrastructure detail, and
 the reason best execution must be measured rather than asserted.</p>
 </div>
@@ -951,7 +996,7 @@ code.</p>
 
 <div class="companion">
 <span class="cp-title">Companion · <span class="labref">C2</span></span>
-<p>Venue selection is only as good as the scorecard behind it. <a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c2">Spread Capture &amp; the Scorecard</a> builds one row per venue — fill rate, effective and realised spread, markout, fee — and <a href="https://rohanshiloh.github.io/exec-tca-stack/#aw-controller">From Scorecard to Controller</a> closes the loop by feeding it back into routing and algo choice.</p>
+<p>Venue selection is only as good as the scorecard behind it. <a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c2">Spread Capture &amp; the Scorecard</a> builds one row per venue — fill rate, effective and realised spread, markout, fee — and <a href="https://rohanshiloh.github.io/exec-tca-stack/#wheel">From Scorecard to Controller</a> closes the loop by feeding it back into routing and algo choice.</p>
 </div>
 
 <p>
@@ -1093,6 +1138,37 @@ immediate, and you pay for it in spread, fees, and a visible print. Urgency is s
 this axis, re-decided for every child order as the book changes.</p>
 </div>
 
+<figure class="cfig">
+<svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Post versus take">
+  <text x="8" y="16" fill="#6b6963" font-size="11" letter-spacing="1">THE BOOK, ONE INSTANT</text>
+  <g font-family="monospace" font-size="12.5">
+    <rect x="8" y="26" width="250" height="22" rx="3" fill="#2a1f22"/><text x="20" y="42" fill="#c0665e">ask  100.02    1,200</text>
+    <rect x="8" y="52" width="250" height="22" rx="3" fill="#2a1f22"/><text x="20" y="68" fill="#c0665e">ask  100.01      800</text>
+    <text x="20" y="94" fill="#6b6963">mid  100.005</text>
+    <rect x="8" y="104" width="250" height="22" rx="3" fill="#17241b"/><text x="20" y="120" fill="#7fb069">bid  100.00      600</text>
+    <rect x="8" y="130" width="250" height="22" rx="3" fill="#17241b"/><text x="20" y="146" fill="#7fb069">bid   99.99    1,500</text>
+  </g>
+
+  <path d="M262 63 L330 63" stroke="#c0665e" stroke-width="1.6" fill="none"/>
+  <circle cx="336" cy="63" r="5" fill="#c0665e"/>
+  <text x="352" y="56" fill="#c0665e" font-size="13">TAKE — cross to 100.01</text>
+  <text x="352" y="74" fill="#918e86" font-size="11">certain, immediate, visible print;</text>
+  <text x="352" y="90" fill="#918e86" font-size="11">you pay the spread and the fee</text>
+
+  <path d="M262 115 L330 115" stroke="#7fb069" stroke-width="1.6" fill="none"/>
+  <circle cx="336" cy="115" r="5" fill="#7fb069"/>
+  <text x="352" y="108" fill="#7fb069" font-size="13">POST — rest at 100.00</text>
+  <text x="352" y="126" fill="#918e86" font-size="11">join the queue, earn the spread —</text>
+  <text x="352" y="142" fill="#918e86" font-size="11">but you may not trade at all, and</text>
+  <text x="352" y="158" fill="#918e86" font-size="11">when you do, someone chose you</text>
+
+  <line x1="8" y1="178" x2="692" y2="178" stroke="#2a2e36"/>
+  <text x="8" y="197" fill="#6b6963" font-size="11.5">Urgency is nothing more than where the algo sits on this axis — re-decided for every child order, as the book moves.</text>
+</svg>
+<figcaption>Post or take: the root routing decision, taken before any venue is chosen.</figcaption>
+</figure>
+
+
 <div class="keybox">
 <span class="kb-title">Key concept — internalisation</span>
 <p>Before a router considers any venue, many brokers first check their own book: can this order be crossed
@@ -1103,8 +1179,40 @@ its own client's trade, which is why internalisation carries disclosure obligati
 in Europe, and why internalised fills must be scored <em>separately</em> in any honest TCA — a house fill at
 the touch and a street fill at the touch are not the same trade, and averaging them together hides exactly the
 thing you want to measure. Make it a column, not a footnote: a liquidity flag on every fill recording whether
-you removed lit liquidity, added it, matched at a dark midpoint, or crossed internally.</p>
+you removed lit liquidity, added it, matched at a dark midpoint, or crossed internally — and see
+<a href="https://rohanshiloh.github.io/exec-tca-stack/#internalise">why the companion scores it apart</a>.</p>
 </div>
+
+<figure class="cfig">
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Internalised versus street fill">
+  <rect x="8" y="78" width="110" height="48" rx="6" fill="#1a1e26" stroke="#3a4150"/>
+  <text x="63" y="100" fill="#d3d0c8" font-size="13" text-anchor="middle">client</text>
+  <text x="63" y="116" fill="#918e86" font-size="10.5" text-anchor="middle">order arrives</text>
+
+  <rect x="188" y="70" width="130" height="64" rx="6" fill="#1a1e26" stroke="#d4a24e"/>
+  <text x="253" y="94" fill="#d4a24e" font-size="13" text-anchor="middle">broker</text>
+  <text x="253" y="112" fill="#918e86" font-size="10.5" text-anchor="middle">checks its own book</text>
+  <text x="253" y="127" fill="#918e86" font-size="10.5" text-anchor="middle">before any venue</text>
+  <line x1="122" y1="102" x2="182" y2="102" stroke="#d4a24e" stroke-width="1.6"/>
+
+  <path d="M322 88 L406 46" stroke="#7fb069" stroke-width="1.8" fill="none"/>
+  <rect x="412" y="20" width="280" height="54" rx="6" fill="#12211a" stroke="#7fb069"/>
+  <text x="428" y="42" fill="#7fb069" font-size="13">crossed in-house</text>
+  <text x="428" y="60" fill="#918e86" font-size="10.5">liq = "I" · fills at the mid · never touches the street</text>
+
+  <path d="M322 116 L406 158" stroke="#7aa9d6" stroke-width="1.8" fill="none"/>
+  <rect x="412" y="130" width="280" height="54" rx="6" fill="#161d26" stroke="#7aa9d6"/>
+  <text x="428" y="152" fill="#7aa9d6" font-size="13">routed to the street</text>
+  <text x="428" y="170" fill="#918e86" font-size="10.5">liq = "R" / "A" · pays spread and venue fees</text>
+
+  <text x="8" y="156" fill="#c0665e" font-size="11">An internalised fill carries</text>
+  <text x="8" y="172" fill="#c0665e" font-size="11">no spread cost and, by</text>
+  <text x="8" y="188" fill="#c0665e" font-size="11">construction, no markout.</text>
+</svg>
+<figcaption>Internalisation: the same order, two entirely different economics — which is why the scorecard must
+hold them apart rather than averaging them together.</figcaption>
+</figure>
+
 
 <div class="keybox">
 <span class="kb-title">Key concept — the maker-taker conflict</span>
@@ -1117,6 +1225,28 @@ routing logic and the client's interest can quietly diverge, and why venue-level
 computing yourself.</p>
 </div>
 
+<figure class="cfig">
+<svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Maker taker economics">
+  <text x="8" y="16" fill="#6b6963" font-size="11" letter-spacing="1">TYPICAL LIT VENUE, PER 100 SHARES</text>
+
+  <rect x="8" y="30" width="330" height="62" rx="6" fill="#17241b" stroke="#7fb069"/>
+  <text x="173" y="54" fill="#7fb069" font-size="13" text-anchor="middle">POST — you added liquidity</text>
+  <text x="173" y="80" fill="#d3d0c8" font-size="19" text-anchor="middle" font-family="monospace">rebate  +$0.25</text>
+
+  <rect x="362" y="30" width="330" height="62" rx="6" fill="#2a1f22" stroke="#c0665e"/>
+  <text x="527" y="54" fill="#c0665e" font-size="13" text-anchor="middle">TAKE — you removed it</text>
+  <text x="527" y="80" fill="#d3d0c8" font-size="19" text-anchor="middle" font-family="monospace">fee     −$0.30</text>
+
+  <line x1="8" y1="112" x2="692" y2="112" stroke="#2a2e36"/>
+  <text x="8" y="134" fill="#918e86" font-size="12">The broker banks the difference …</text>
+  <text x="692" y="134" fill="#918e86" font-size="12" text-anchor="end">… the client lives with the execution</text>
+  <text x="8" y="162" fill="#c0665e" font-size="11.5">So a router can be tuned to rest where the economics are best rather than where the fill is — and the two are not the same venue.</text>
+</svg>
+<figcaption>Maker-taker: the fee schedule that quietly pays your router to make a choice you did not ask it to
+make.</figcaption>
+</figure>
+
+
 <p>
 Which is why the last box in the loop matters most: a serious desk scores every venue continuously — fill
 rates, effective spread paid, adverse selection measured by post-fill reversion, queue position achieved — and
@@ -1124,11 +1254,11 @@ feeds those scores back into the routing table. The router is only as good as th
 and those statistics are exactly the ones the next subsection defines.
 </p>
 
-<h3 id="analytics">The analytics vocabulary</h3>
+<h3 id="benchmarks">The analytics vocabulary</h3>
 
 <div class="companion">
 <span class="cp-title">Companion · vocabulary</span>
-<p>The companion carries a <a href="https://rohanshiloh.github.io/exec-tca-stack/#glossary">33-term glossary on one page</a>, each entry paired with the mistake most often made with it, and a <a href="https://rohanshiloh.github.io/exec-tca-stack/#bm-cheat">cheat sheet</a> giving every benchmark alongside the question it answers and the question it cannot. For choosing between them under time pressure: <a href="https://rohanshiloh.github.io/exec-tca-stack/#bm-which">Which One Should I Use?</a></p>
+<p>The companion carries a <a href="https://rohanshiloh.github.io/exec-tca-stack/#glossary">33-term glossary on one page</a>, each entry paired with the mistake most often made with it, and a <a href="https://rohanshiloh.github.io/exec-tca-stack/#cheat-sheet">cheat sheet</a> giving every benchmark alongside the question it answers and the question it cannot. For choosing between them under time pressure: <a href="https://rohanshiloh.github.io/exec-tca-stack/#which-metric">Which One Should I Use?</a></p>
 </div>
 
 <p>
@@ -1183,6 +1313,37 @@ captures delay, impact, and spread together, and it is what the <code>aj</code> 
 computes fill by fill.</p>
 </div>
 
+<figure class="cfig">
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Slippage against arrival price">
+  <line x1="52" y1="18" x2="52" y2="150" stroke="#2a2e36"/>
+  <line x1="52" y1="150" x2="690" y2="150" stroke="#2a2e36"/>
+  <text x="8" y="40" fill="#6b6963" font-size="11">price</text>
+
+  <line x1="52" y1="120" x2="690" y2="120" stroke="#7aa9d6" stroke-width="1.4" stroke-dasharray="4 4"/>
+  <text x="60" y="114" fill="#7aa9d6" font-size="11.5">arrival mid — the price when the decision was made</text>
+
+  <line x1="52" y1="70" x2="690" y2="70" stroke="#d4a24e" stroke-width="1.4"/>
+  <text x="60" y="64" fill="#d4a24e" font-size="11.5">your average fill</text>
+
+  <rect x="300" y="70" width="190" height="50" fill="#c0665e" opacity="0.13"/>
+  <path d="M395 70 L395 120" stroke="#c0665e" stroke-width="1.2"/>
+  <path d="M390 76 L395 70 L400 76" stroke="#c0665e" stroke-width="1.2" fill="none"/>
+  <path d="M390 114 L395 120 L400 114" stroke="#c0665e" stroke-width="1.2" fill="none"/>
+  <text x="406" y="99" fill="#c0665e" font-size="12">slippage, in bps</text>
+
+  <g fill="#7fb069">
+    <circle cx="96" cy="84" r="3.4"/><circle cx="162" cy="62" r="3.4"/><circle cx="228" cy="76" r="3.4"/>
+    <circle cx="294" cy="56" r="3.4"/><circle cx="360" cy="74" r="3.4"/><circle cx="426" cy="60" r="3.4"/>
+    <circle cx="492" cy="80" r="3.4"/><circle cx="558" cy="64" r="3.4"/><circle cx="624" cy="72" r="3.4"/>
+  </g>
+  <text x="96" y="168" fill="#6b6963" font-size="11">individual fills, scattered around their own average</text>
+  <text x="690" y="168" fill="#6b6963" font-size="11" text-anchor="end">time →</text>
+  <text x="8" y="192" fill="#918e86" font-size="11.5">Signed so positive means you paid. Change the reference line and you change the metric — VWAP, close, PWP all sit at different heights.</text>
+</svg>
+<figcaption>Slippage: the distance between what you got and the price you are being measured against.</figcaption>
+</figure>
+
+
 <div class="keybox">
 <span class="kb-title">Key concept — drift</span>
 <p>The adverse trend component of price movement over the execution horizon — the market walking away from you
@@ -1191,6 +1352,34 @@ each fill is executed beautifully. Drift is why urgency exists as an algo parame
 drift exposure at the cost of more impact. Schedule-tracking algos also speak of <em>participation drift</em> —
 deviation from the target participation curve — an execution-quality alarm rather than a price concept.</p>
 </div>
+
+<figure class="cfig">
+<svg viewBox="0 0 700 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Drift during the execution window">
+  <line x1="52" y1="14" x2="52" y2="140" stroke="#2a2e36"/>
+  <line x1="52" y1="140" x2="690" y2="140" stroke="#2a2e36"/>
+
+  <line x1="52" y1="118" x2="690" y2="118" stroke="#7aa9d6" stroke-width="1.2" stroke-dasharray="4 4"/>
+  <text x="60" y="134" fill="#7aa9d6" font-size="11">arrival</text>
+
+  <polyline points="60,118 130,112 200,100 270,94 340,78 410,70 480,54 550,46 620,34 686,26"
+            fill="none" stroke="#c0665e" stroke-width="2.2"/>
+
+  <g fill="#7fb069">
+    <circle cx="130" cy="112" r="3"/><circle cx="270" cy="94" r="3"/>
+    <circle cx="410" cy="70" r="3"/><circle cx="550" cy="46" r="3"/>
+  </g>
+
+  <path d="M668 118 L668 32" stroke="#c0665e" stroke-width="1.2"/>
+  <path d="M663 38 L668 32 L673 38" stroke="#c0665e" stroke-width="1.2" fill="none"/>
+  <text x="658" y="24" fill="#c0665e" font-size="11.5" text-anchor="end">the market left without you</text>
+
+  <text x="60" y="162" fill="#6b6963" font-size="11">green dots are your fills — each one executed perfectly well</text>
+  <text x="8" y="182" fill="#918e86" font-size="11.5">Drift is the cost of the minutes themselves. Trading faster buys less of it, and pays for the privilege in impact.</text>
+</svg>
+<figcaption>Drift: the adverse trend you are exposed to simply by taking time, independent of how well each
+individual fill was executed.</figcaption>
+</figure>
+
 
 <div class="keybox">
 <span class="kb-title">Key concept — reversion</span>
@@ -1202,11 +1391,38 @@ chronic reversion against your fills is the classic signature of trading too agg
 detected.</p>
 </div>
 
+<figure class="cfig">
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Temporary versus permanent impact">
+  <line x1="52" y1="14" x2="52" y2="146" stroke="#2a2e36"/>
+  <line x1="52" y1="146" x2="690" y2="146" stroke="#2a2e36"/>
+
+  <line x1="300" y1="14" x2="300" y2="146" stroke="#d4a24e" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="306" y="26" fill="#d4a24e" font-size="11.5">your last fill</text>
+
+  <polyline points="60,118 120,112 180,98 240,76 300,62" fill="none" stroke="#918e86" stroke-width="2"/>
+  <text x="90" y="136" fill="#6b6963" font-size="11">you, buying</text>
+
+  <polyline points="300,62 360,82 430,100 510,110 600,114 686,115"
+            fill="none" stroke="#7fb069" stroke-width="2.2"/>
+  <text x="686" y="132" fill="#7fb069" font-size="11.5" text-anchor="end">temporary impact — the reversion is your overpayment</text>
+
+  <polyline points="300,62 380,58 470,62 570,58 686,60"
+            fill="none" stroke="#c0665e" stroke-width="2.2"/>
+  <text x="686" y="48" fill="#c0665e" font-size="11.5" text-anchor="end">permanent impact — the information was real</text>
+
+  <text x="8" y="176" fill="#918e86" font-size="11.5">Measured at one, ten and sixty seconds past the fill. Damage that lands fast and recovers is a latency story;</text>
+  <text x="8" y="193" fill="#918e86" font-size="11.5">damage that compounds is an information one, and chronic reversion against your fills means you are being read.</text>
+</svg>
+<figcaption>Reversion: what the price does after you stop, and the only diagnostic that separates paying for
+liquidity from being picked off.</figcaption>
+</figure>
+
+
 <h3 id="markouts">Markouts: what the fill looks like afterwards</h3>
 
 <div class="companion">
 <span class="cp-title">Companion · <span class="labref">C1</span></span>
-<p><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c1">Markouts at 1s / 10s / 60s</a> computes these curves off a live stream — the same <code>aj</code> as arrival slippage, run against a shifted timestamp. The <a href="https://rohanshiloh.github.io/exec-tca-stack/#markout-curves">curve figure</a> there is drawn from real stack output rather than, as here, from illustration.</p>
+<p><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c1">Markouts at 1s / 10s / 60s</a> computes these curves off a live stream — the same <code>aj</code> as arrival slippage, run against a shifted timestamp. The <a href="https://rohanshiloh.github.io/exec-tca-stack/#fig-markouts">curve figure</a> there is drawn from real stack output rather than, as here, from illustration.</p>
 </div>
 
 <p>
@@ -1218,7 +1434,9 @@ aggregate slippage number will ever show you.
 <span class="snref"></span>
 <span class="sn">Sign conventions differ between desks and vendors — some quote markouts from the perspective of
 the liquidity provider, flipping every number. Fix the convention once, write it down, and put it in the column
-header; more TCA arguments start here than anywhere else.</span>
+header; more TCA arguments start here than anywhere else. The companion settles it in a single helper and
+documents the <a href="https://rohanshiloh.github.io/exec-tca-stack/#signed-bps">one exception it deliberately keeps</a> — effective and realised
+spread stay on the microstructure convention rather than silently inverting the published literature.</span>
 </p>
 
 <p>
@@ -1617,6 +1835,114 @@ ExecutionReports and kdb+ imposes with the tickerplant log, enforced here at the
 </div>
 
 <p>
+What makes that work is worth drawing, because the architecture is almost aggressively unremarkable — and the
+absences are the design. There is no broker process, so there is no network hop and no broker state machine in
+the path. There is no object graph on the Java heap, so the garbage collector never sees the data. There is no
+backpressure from reader to writer, because readers hold nothing but their own position in a file; a consumer
+that stalls falls behind and catches up, and the producer never learns it happened. Capacity is bounded by
+disk rather than by memory, which turns "replay a hundred terabytes" from an architectural problem into a
+storage one.
+<span class="snref"></span>
+<span class="sn">Chronicle's own framing is a "record everything" queue behaving as a broker-less, durable,
+persisted JVM topic — under a microsecond between JVMs on one machine, under ten across machines with
+Enterprise replication. The Enterprise line adds TCP replication for HA/DR, encryption, an Async Mode buffer
+that flattens tail latency under sustained load, and binary-compatible Java, C++, Rust and Python libraries
+reading the same files.</span>
+</p>
+
+<figure class="fw" id="fig-queue">
+<svg viewBox="0 0 1150 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chronicle Queue architecture">
+  <defs>
+    <marker id="arq" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#d4a24e"/>
+    </marker>
+    <marker id="arqb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7aa9d6"/>
+    </marker>
+  </defs>
+
+  <!-- writer -->
+  <text x="10" y="26" fill="#6b6963" font-size="12" letter-spacing="1.4">WRITER PROCESS</text>
+  <rect x="10" y="44" width="180" height="96" rx="8" fill="#1a1e26" stroke="#3a4150"/>
+  <text x="100" y="76" fill="#d3d0c8" font-size="14" text-anchor="middle">Appender</text>
+  <text x="100" y="98" fill="#918e86" font-size="11" text-anchor="middle">single writer owns</text>
+  <text x="100" y="114" fill="#918e86" font-size="11" text-anchor="middle">the head — no lock</text>
+  <text x="100" y="131" fill="#6b6963" font-size="10.5" text-anchor="middle" class="m">acquireAppender()</text>
+
+  <!-- the mapped file -->
+  <text x="300" y="26" fill="#d4a24e" font-size="12" letter-spacing="1.4">MEMORY-MAPPED FILE · ONE .cq4 PER ROLL CYCLE</text>
+  <rect x="300" y="44" width="560" height="96" rx="8" fill="#171c22" stroke="#d4a24e"/>
+  <g font-size="10.5" class="m" text-anchor="middle">
+    <rect x="316" y="62" width="86" height="40" rx="4" fill="#1f2731" stroke="#3a4150"/><text x="359" y="87" fill="#918e86">excerpt</text>
+    <rect x="410" y="62" width="86" height="40" rx="4" fill="#1f2731" stroke="#3a4150"/><text x="453" y="87" fill="#918e86">excerpt</text>
+    <rect x="504" y="62" width="86" height="40" rx="4" fill="#1f2731" stroke="#3a4150"/><text x="547" y="87" fill="#918e86">excerpt</text>
+    <rect x="598" y="62" width="86" height="40" rx="4" fill="#1f2731" stroke="#3a4150"/><text x="641" y="87" fill="#918e86">excerpt</text>
+    <rect x="692" y="62" width="86" height="40" rx="4" fill="#1f2731" stroke="#d4a24e"/><text x="735" y="87" fill="#d4a24e">head</text>
+    <rect x="786" y="62" width="58" height="40" rx="4" fill="#12151a" stroke="#2a2e36" stroke-dasharray="3 3"/><text x="815" y="87" fill="#4a4844">…</text>
+  </g>
+  <text x="580" y="128" fill="#6b6963" font-size="11" text-anchor="middle">append-only · never overwritten · total ordering · off-heap, invisible to GC</text>
+
+  <line x1="196" y1="92" x2="294" y2="92" stroke="#d4a24e" stroke-width="1.8" marker-end="url(#arq)"/>
+
+  <!-- readers: one row, ordered left-to-right by read position so no arrow crosses -->
+  <g stroke="#7aa9d6" stroke-width="1.5" fill="none" stroke-dasharray="4 4">
+    <line x1="359" y1="146" x2="150" y2="218" marker-end="url(#arqb)"/>
+    <line x1="547" y1="146" x2="430" y2="218" marker-end="url(#arqb)"/>
+    <line x1="735" y1="146" x2="718" y2="218" marker-end="url(#arqb)"/>
+    <line x1="815" y1="146" x2="998" y2="218" marker-end="url(#arqb)"/>
+  </g>
+
+  <g font-size="13" fill="#d3d0c8" text-anchor="middle">
+    <rect x="10" y="224" width="264" height="72" rx="7" fill="#1a1e26" stroke="#3a4150"/>
+    <text x="142" y="252">Tailer · replay</text>
+    <text x="142" y="273" font-size="10.5" fill="#918e86" class="m">from index 0</text>
+    <text x="142" y="288" font-size="10.5" fill="#6b6963">surveillance, backtest</text>
+
+    <rect x="298" y="224" width="264" height="72" rx="7" fill="#1a1e26" stroke="#7aa9d6"/>
+    <text x="430" y="252" fill="#7aa9d6">Named tailer</text>
+    <text x="430" y="273" font-size="10.5" fill="#918e86" class="m">resumes at last index</text>
+    <text x="430" y="288" font-size="10.5" fill="#6b6963">survives a restart</text>
+
+    <rect x="586" y="224" width="264" height="72" rx="7" fill="#1a1e26" stroke="#7aa9d6"/>
+    <text x="718" y="252" fill="#7aa9d6">Tailer · live</text>
+    <text x="718" y="273" font-size="10.5" fill="#918e86" class="m">at the head</text>
+    <text x="718" y="288" font-size="10.5" fill="#6b6963">strategy engine</text>
+
+    <rect x="874" y="224" width="264" height="72" rx="7" fill="#1a1e26" stroke="#3a4150"/>
+    <text x="1006" y="252">Tailer · another language</text>
+    <text x="1006" y="273" font-size="10.5" fill="#918e86" class="m">C++ · Rust · Python</text>
+    <text x="1006" y="288" font-size="10.5" fill="#6b6963">identical bytes, no bridge</text>
+  </g>
+
+  <text x="574" y="322" fill="#6b6963" font-size="12" letter-spacing="1.4" text-anchor="middle">READER PROCESSES — EACH AT ITS OWN POSITION, NONE ABLE TO SLOW THE WRITER</text>
+
+  <!-- replication -->
+  <rect x="900" y="44" width="240" height="96" rx="8" fill="#12211a" stroke="#7fb069" stroke-dasharray="4 4"/>
+  <text x="1020" y="74" fill="#7fb069" font-size="13" text-anchor="middle">Replication — Enterprise</text>
+  <text x="1020" y="96" fill="#918e86" font-size="10.5" text-anchor="middle">sink holds the same messages</text>
+  <text x="1020" y="112" fill="#918e86" font-size="10.5" text-anchor="middle">in the same sequence</text>
+  <text x="1020" y="130" fill="#6b6963" font-size="10.5" text-anchor="middle" class="m">TCP · &lt;10 µs</text>
+  <line x1="866" y1="92" x2="894" y2="92" stroke="#7fb069" stroke-width="1.5" marker-end="url(#arq)"/>
+
+  <!-- the absences -->
+  <line x1="10" y1="346" x2="1140" y2="346" stroke="#2a2e36"/>
+  <text x="10" y="370" font-size="12.5" fill="#918e86">What is <tspan fill="#c0665e">not</tspan> in this picture is the design: no broker process · no network hop on the local path · no object graph for the GC to scan ·</text>
+  <text x="10" y="389" font-size="12.5" fill="#918e86">no backpressure from reader to writer · no size ceiling short of the disk.</text>
+</svg>
+<figcaption>Fig. 8 — Chronicle Queue, in full. A queue is a directory of memory-mapped files — one per roll
+cycle, conventionally a day — into which an appender writes excerpts and never rewrites them. Because the file
+is mapped rather than brokered, every reader in every process is looking at the same bytes the writer just
+produced, with no copy and no hop. Tailers are independent: one sits at the head feeding a live strategy,
+another replays from index zero for surveillance, a third is <em>named</em> and so resumes at its last position
+after a restart, and a fourth may be C++, Rust or Python reading the identical binary format. None of them can
+slow the writer down, because a tailer holds nothing but an index. The green box is the Enterprise addition —
+TCP replication giving a second host the same messages in the same order, which is what makes a cross-machine
+failover resume rather than restart. The rule beneath all of it: total ordering plus immutability means a
+replay returns exactly the sequence that was written, every time it is asked — which is precisely the property
+a regulator means by a defensible audit trail.</figcaption>
+</figure>
+
+<p>
 An OMS/EMS built this way decomposes into a chain of small, single-threaded services connected by queues:
 a FIX gateway normalises client flow onto an input queue; a risk-and-compliance service reads it and emits
 accepted orders; an algo container slices; venue gateways speak FIX or native protocols outward; and every one
@@ -1684,7 +2010,7 @@ letting the consumer read several — queues are cheap.</span>
 
   <text x="10" y="285" font-size="12" fill="#6b6963" font-style="italic">Latency budget: ~1 µs per FIX parse, sub-µs per queue hop — a full gateway-to-venue traversal in the tens of microseconds.</text>
 </svg>
-<figcaption>Fig. 8 — An order path built on Chronicle. Each blue box is a deliberately boring single-threaded
+<figcaption>Fig. 9 — An order path built on Chronicle. Each blue box is a deliberately boring single-threaded
 Java service; each amber Q is a Chronicle Queue — an append-only, memory-mapped log written once and tailed by
 anyone. The pipeline is the EMS of Figure 1 turned inside out: instead of one monolith holding state, the state
 <em>is</em> the sequence of messages on the queues, and every service is a replayable fold over them. The grey
@@ -1703,7 +2029,7 @@ needs to <em>be</em> the venue. The mapping onto this document's vocabulary is d
 <table>
 <thead><tr><th>Chronicle component</th><th>Lifecycle role</th></tr></thead>
 <tbody>
-<tr><td>Chronicle Queue</td><td>The event stream itself — every arrow in Fig. 8; IPC, persistence, replay, and audit in one</td></tr>
+<tr><td>Chronicle Queue</td><td>The event stream itself — every arrow in Fig. 9; IPC, persistence, replay, and audit in one</td></tr>
 <tr><td>Chronicle FIX</td><td>The FIX engine of §5 — session layer, µs parsing, all versions; gateways in and out</td></tr>
 <tr><td>Chronicle Services</td><td>The CEP tier — risk checks, algo containers, order-state folds as single-threaded event handlers</td></tr>
 <tr><td>Queue-Backed Map</td><td>Derived keyed state — open orders, positions, limits — replicated and rebuildable from the queue</td></tr>
@@ -1711,6 +2037,421 @@ needs to <em>be</em> the venue. The mapping onto this document's vocabulary is d
 <tr><td>Matching Engine framework</td><td>The venue side of Fig. 1 — order book, matching, self-trade prevention</td></tr>
 </tbody>
 </table>
+
+<h3 id="chronicle-kdb">Crossing into kdb+</h3>
+
+<p>
+In February 2021 Chronicle announced it had integrated Chronicle Queue with kdb+, the work done in partnership
+with AquaQ Analytics — now Data Intellect — who open-sourced the result. The problem it solves is the one this
+section has been circling: Chronicle is superb at moving a message between Java processes in under a
+microsecond, and kdb+ is superb at storing and querying billions of them, and the two speak entirely different
+languages. Something has to stand between a memory-mapped queue of self-describing Java objects and a columnar
+database expecting bulk inserts.
+<span class="snref"></span>
+<span class="sn">Peter Lawrey for Chronicle and Jonny Press, then CTO of AquaQ, announced it jointly on 5 February
+2021. The adapter that came out of it is on GitHub as
+<a href="https://github.com/DataIntellectTech/kdb-chronicle-queue">DataIntellectTech/kdb-chronicle-queue</a> —
+a Producer, an Adapter and a dummy tickerplant, about which everything below is drawn from the source rather
+than the press release.</span>
+</p>
+
+<p>
+Chronicle's own vocabulary is three nouns. An <strong>excerpt</strong> is one message — a container of bytes in
+the mapped file. An <strong>appender</strong> writes them; a <strong>tailer</strong> reads them, sequentially,
+like an iterator that never reaches the end. That is the entire API surface you need to move data, and its
+smallness is the point: there is no broker, no topic metadata, no coordination protocol, just a file two
+processes have both mapped.
+<span class="snref"></span>
+<span class="sn">Beware of version drift in the tutorials. Chronicle 3.x used
+<code>ChronicleQueueBuilder.indexed(dir)</code> with <code>startExcerpt</code>/<code>finish</code> and typed
+<code>writeUTF</code> calls; the 5.x line the adapter builds against uses
+<code>SingleChronicleQueueBuilder</code>, <code>acquireAppender()</code> and
+<code>writeDocument(w -&gt; …)</code> with self-describing messages. The concepts survived the rewrite intact;
+the method names did not.</span>
+</p>
+
+<figure class="fw" id="fig-adapter">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Chronicle Queue to kdb+ adapter">
+  <defs>
+    <marker id="ar9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#d4a24e"/>
+    </marker>
+  </defs>
+
+  <text x="10" y="26" fill="#6b6963" font-size="12" letter-spacing="1.4">JAVA SIDE — ROW AT A TIME, MICROSECONDS</text>
+  <text x="800" y="26" fill="#6b6963" font-size="12" letter-spacing="1.4">kdb+ SIDE — COLUMNAR, BATCHED</text>
+
+  <!-- producer -->
+  <rect x="10" y="48" width="150" height="86" rx="8" fill="#1a1e26" stroke="#3a4150"/>
+  <text x="85" y="80" fill="#d3d0c8" font-size="14" text-anchor="middle">Producer</text>
+  <text x="85" y="101" fill="#918e86" font-size="11" text-anchor="middle">appender writes</text>
+  <text x="85" y="118" fill="#918e86" font-size="11" text-anchor="middle">self-describing msgs</text>
+
+  <!-- queue -->
+  <rect x="210" y="48" width="150" height="86" rx="8" fill="#1a1e26" stroke="#d4a24e"/>
+  <text x="285" y="76" fill="#d4a24e" font-size="14" text-anchor="middle">Chronicle Queue</text>
+  <text x="285" y="97" fill="#918e86" font-size="11" text-anchor="middle">memory-mapped file</text>
+  <text x="285" y="114" fill="#918e86" font-size="11" text-anchor="middle" class="m">…/Producer/quote</text>
+
+  <!-- adapter box -->
+  <rect x="410" y="48" width="470" height="300" rx="10" fill="#12161c" stroke="#3a4150"/>
+  <text x="430" y="72" fill="#7aa9d6" font-size="14">Adapter</text>
+  <text x="500" y="72" fill="#6b6963" font-size="11" class="m">continuous polling loop</text>
+
+  <g font-size="12.5" fill="#d3d0c8">
+    <rect x="432" y="92" width="190" height="52" rx="6" fill="#1a1e26" stroke="#2f3642"/>
+    <text x="448" y="114">1 · named tailer</text>
+    <text x="448" y="132" font-size="10.5" fill="#918e86" class="m">resumes at last index</text>
+
+    <rect x="432" y="158" width="190" height="52" rx="6" fill="#1a1e26" stroke="#2f3642"/>
+    <text x="448" y="180">2 · marshal → POJO</text>
+    <text x="448" y="198" font-size="10.5" fill="#918e86" class="m">ChronicleQuoteMsg</text>
+
+    <rect x="432" y="224" width="190" height="52" rx="6" fill="#1a1e26" stroke="#2f3642"/>
+    <text x="448" y="246">3 · MapStruct map</text>
+    <text x="448" y="264" font-size="10.5" fill="#918e86" class="m">→ KdbQuoteMessage</text>
+
+    <rect x="432" y="290" width="190" height="42" rx="6" fill="#1a1e26" stroke="#2f3642"/>
+    <text x="448" y="316">4 · filter (sym …)</text>
+
+    <rect x="662" y="150" width="196" height="118" rx="6" fill="#1a1e26" stroke="#7fb069"/>
+    <text x="760" y="178" fill="#7fb069" text-anchor="middle">5 · envelope</text>
+    <text x="760" y="200" font-size="10.5" fill="#918e86" text-anchor="middle" class="m">kdb.envelope.size=100</text>
+    <text x="760" y="222" font-size="10.5" fill="#918e86" text-anchor="middle">accumulates rows,</text>
+    <text x="760" y="238" font-size="10.5" fill="#918e86" text-anchor="middle">flushes on full</text>
+    <text x="760" y="256" font-size="10.5" fill="#918e86" text-anchor="middle">or on idle</text>
+  </g>
+
+  <!-- kdb -->
+  <rect x="940" y="150" width="200" height="118" rx="8" fill="#1a1e26" stroke="#d4a24e"/>
+  <text x="1040" y="182" fill="#d4a24e" font-size="14" text-anchor="middle">kdb+ :5000</text>
+  <text x="1040" y="206" fill="#918e86" font-size="11" text-anchor="middle" class="m">.u.upd[`quote;…]</text>
+  <text x="1040" y="228" fill="#918e86" font-size="11" text-anchor="middle">quote table</text>
+  <text x="1040" y="248" fill="#918e86" font-size="11" text-anchor="middle">time · chrontime · sym …</text>
+
+  <g stroke="#d4a24e" stroke-width="1.7" fill="none">
+    <line x1="166" y1="91" x2="204" y2="91" marker-end="url(#ar9)"/>
+    <line x1="366" y1="91" x2="426" y2="110" marker-end="url(#ar9)"/>
+    <line x1="527" y1="150" x2="527" y2="152" marker-end="url(#ar9)"/>
+    <line x1="527" y1="216" x2="527" y2="218" marker-end="url(#ar9)"/>
+    <line x1="527" y1="282" x2="527" y2="284" marker-end="url(#ar9)"/>
+    <line x1="628" y1="306" x2="656" y2="250" marker-end="url(#ar9)"/>
+    <line x1="864" y1="209" x2="934" y2="209" marker-end="url(#ar9)"/>
+  </g>
+  <text x="899" y="200" fill="#918e86" font-size="10.5" text-anchor="middle" class="m">ks()</text>
+  <text x="899" y="226" fill="#918e86" font-size="10.5" text-anchor="middle" class="m">Object[]</text>
+
+  <!-- sent tailer -->
+  <path d="M 940 268 C 900 360 700 372 527 348" stroke="#7fb069" stroke-width="1.5" fill="none" stroke-dasharray="4 4" marker-end="url(#ar9)"/>
+  <text x="740" y="392" fill="#7fb069" font-size="11.5" text-anchor="middle" class="m">sentTailer advances only once kdb+ has the batch — the commit point</text>
+</svg>
+<figcaption>Fig. 10 — The adapter, and the seam it covers. On the left the Java world writes one self-describing
+message at a time into a memory-mapped file; on the right kdb+ wants columns, in bulk, through
+<code>.u.upd</code>. The adapter is the impedance match. A <em>named</em> tailer (1) reads forward and, because
+it is named, resumes at the last index it reached rather than at the start of the file. Each excerpt is
+marshalled into a Chronicle POJO (2), mapped by generated MapStruct code into its kdb+ counterpart (3), and
+optionally filtered (4) on a string field such as <code>sym</code>. Rows then accumulate in an
+<em>envelope</em> (5) until it reaches <code>kdb.envelope.size</code> or the queue goes quiet, at which point
+the whole batch crosses as a single <code>Object[]</code> through the Java API's <code>ks()</code> call. The
+dashed green path is the detail that makes it correct: a second named tailer advances only after kdb+ has
+accepted a batch, so a crash mid-envelope rewinds to the last <em>confirmed</em> message rather than the last
+<em>read</em> one.</figcaption>
+</figure>
+
+<div class="keybox">
+<span class="kb-title">Key concept — the envelope, and two clocks</span>
+<p>Chronicle's rhythm is one message, now. kdb+'s rhythm is many rows, together — a per-row IPC round trip
+would squander both systems' advantages at once. The envelope reconciles them: buffer rows on the Java side,
+send as a single <code>Object[]</code> when it fills or when the queue falls idle. The idle flush matters as
+much as the size threshold, since otherwise a quiet market leaves the last few quotes stranded in memory. This
+is the same batching logic a tickerplant applies on its own publish loop, implemented one hop earlier.</p>
+</div>
+
+<div class="keybox">
+<span class="kb-title">Key concept — read offset vs commit offset</span>
+<p>The adapter keeps <em>two</em> named tailers: <code>quoteTailer</code>, tracking what has been read, and
+<code>quoteSentTailer</code>, tracking what kdb+ has actually acknowledged. Version 1.1.0 exists because the
+first release kept only the former — so a restart with a part-full envelope silently dropped those messages,
+which had been read but never stored. Splitting the two turns the envelope from a hole in the audit trail into
+a replayable window: on restart, rewind to the commit offset and re-send. Every durable pipeline eventually
+rediscovers this distinction; Kafka calls it the committed offset, and the consequence is the same — delivery
+becomes at-least-once, so the consumer must be idempotent, which is exactly what the <code>execid</code> dedupe
+in §8 provides.</p>
+</div>
+
+<p>
+One configuration detail repays attention, because it is the same idea as Figure 4 wearing different clothes.
+The adapter can filter on any string field — <code>adapter.messageFilterField=sym</code> with an inclusion or
+exclusion list — and the stated purpose is to let several adapter instances run independently. That is
+sharding: partition the symbol universe, give each adapter its own slice, and no two instances contend for the
+same work. The order distributor does it to trading engines; the adapter does it to database writers; the
+reasoning is identical both times.
+</p>
+
+<table class="fw-table">
+<thead><tr><th>Setting</th><th>Example</th><th>What it governs</th></tr></thead>
+<tbody>
+<tr><td><code>chronicle.source</code></td><td><code>~/ChronicleQueue/Producer/quote</code></td><td>Filesystem path of the queue — a directory, not a broker address</td></tr>
+<tr><td><code>chronicle.tailerName</code></td><td><code>quoteTailer</code></td><td>Named read tailer; survives restarts by resuming at its last index</td></tr>
+<tr><td><code>chronicle.sentTailerName</code></td><td><code>quoteSentTailer</code></td><td>Commit offset — the last excerpt kdb+ has confirmed</td></tr>
+<tr><td><code>kdb.envelope.size</code></td><td><code>100</code></td><td>Rows per batch; flushed early when the queue is idle</td></tr>
+<tr><td><code>kdb.destination</code> / <code>.function</code></td><td><code>quote</code> / <code>.u.upd</code></td><td>Target table and the q function the batch is applied through</td></tr>
+<tr><td><code>adapter.messageType</code></td><td><code>QUOTE</code></td><td>Which message class this instance handles (<code>QUOTE</code> or <code>TRADE</code>)</td></tr>
+<tr><td><code>adapter.messageFilterField</code> / <code>In</code> / <code>Out</code></td><td><code>sym</code> / <code>VOD.L,HEIN.AS</code></td><td>Shard key and allow/deny list — use one list or the other, never both</td></tr>
+<tr><td><code>adapter.coreAffinity</code></td><td><code>-1</code></td><td>Pin to a core via Java-Thread-Affinity; <code>-1</code> disables (best on Linux)</td></tr>
+<tr><td><code>adapter.stopFile</code></td><td><code>…/quote/STOP.txt</code></td><td>Graceful shutdown by file existence — polled on an interval</td></tr>
+<tr><td><code>adapter.runMode</code></td><td><code>NORMAL</code></td><td><code>NORMAL</code>, <code>BENCH</code> (JLBH sampling) or <code>KDB_BENCH</code></td></tr>
+</tbody>
+</table>
+
+<h3 id="run-it">Run it</h3>
+
+<p>
+Four processes, a strict start order, and one script to make the upstream project run anywhere but Windows.
+Both files live in
+<a href="https://github.com/rohanshiloh/order-trade-lifecycle/tree/main/chronicle-kdb"><code>chronicle-kdb/</code></a>
+of this paper's repository.
+<span class="snref"></span>
+<span class="sn">The order is not arbitrary: the adapter connects to kdb+ <em>before</em> it opens the queue, and
+a tailer cannot open a queue directory that does not exist, so the Producer must have appended at least once.
+Each step below waits on the one above it.</span>
+</p>
+
+<div class="step">
+  <span class="num">01</span>
+  <div class="body">
+    <h4>Check the toolchain</h4>
+    <p>Java 11 or later for the two Spring Boot apps, <code>q</code> on the <code>PATH</code>, and git. The
+    setup script checks all three and warns rather than failing, so you can clone first and install
+    <code>q</code> after.</p>
+<pre><code>java -version      <span class="q-c"># 11+</span>
+q -V               <span class="q-c"># KDB-X Community Edition is fine</span>
+git --version</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <span class="num">02</span>
+  <div class="body">
+    <h4>Clone and de-Windows</h4>
+    <p>The upstream repository was written on Windows: its bundled <code>application.properties</code> point at
+    <code>C:\\ChronicleQueue\\…</code> and will not resolve anywhere else. <code>setup.sh</code> clones it,
+    creates the queue directory, removes any stale stop file, and rewrites those paths — keeping a
+    <code>.orig</code> of every file it edits, so it is safe to re-run.</p>
+<pre><code>cd ~/code/order-trade-lifecycle/chronicle-kdb
+chmod +x setup.sh
+./setup.sh                        <span class="q-c"># CLONE_DIR= and QUEUE_DIR= override the defaults</span></code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <span class="num">03</span>
+  <div class="body">
+    <h4>Confirm the ported config</h4>
+    <p>The script prints the result. Both path keys should be POSIX, with no <code>C:</code> and no surviving
+    backslash — the trailing <code>\\STOP.txt</code> is the one that tends to escape a careless port.</p>
+<pre><code>grep -E '^(chronicle\.|adapter\.stopFile=)' \
+  ~/code/kdb-chronicle-queue/Adapter/src/main/resources/application.properties
+
+chronicle.source=/Users/you/ChronicleQueue/Producer/quote
+chronicle.tailerName=quoteTailer
+chronicle.sentTailerName=quoteSentTailer
+adapter.stopFile=/Users/you/ChronicleQueue/Producer/quote/STOP.txt</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <span class="num">04</span>
+  <div class="body">
+    <h4>Start, one process per tab</h4>
+    <p>Copy the launch configuration into Warp and open it from the Command Palette. Five colour-coded tabs
+    start in dependency order; the <span class="labref">CTRL</span> tab takes focus, and that is where you
+    type.</p>
+<pre><code>cp kdb-chronicle.yaml ~/.warp/launch_configurations/
+<span class="q-c"># Warp → Command Palette → Launch Configuration → kdb-chronicle</span></code></pre>
+    <p style="margin-top:.6rem">Or by hand, in four terminals, pausing between each:</p>
+<pre><code>cd ~/code/kdb-chronicle-queue/kdb      &amp;&amp; q dummytp.q -p 5000
+cd ~/code/kdb-chronicle-queue/Producer &amp;&amp; ./mvnw spring-boot:run
+cd ~/code/kdb-chronicle-queue/Adapter  &amp;&amp; ./mvnw spring-boot:run</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <span class="num">05</span>
+  <div class="body">
+    <h4>Check it's up</h4>
+    <p>The tables should exist and be empty, and the Producer should be answering on :9090. The adapter logs
+    the index its tailer starts from — that number is the proof the named tailer resumed rather than rewound.</p>
+<pre><code>q)quote
+time chrontime sym bid bsize ask asize bex aex
+----------------------------------------------
+
+curl -s -o /dev/null -w '%{http_code}\n' http://localhost:9090/producer/swagger-ui.html
+
+<span class="q-c"># adapter log:  Tailer starting at index: 80148384825736</span></code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <span class="num">06</span>
+  <div class="body">
+    <h4>Drive the Producer</h4>
+    <p>Swagger is the documented route; curl is faster. Batches of a thousand, no gap inside a batch, repeating
+    every two seconds.</p>
+<pre><code>curl -X POST 'http://localhost:9090/producer/quoteLoader?noOfMsgs=1000&amp;gap=0&amp;repeatMs=2000'
+
+<span class="q-c"># TIMING: Added 1000 messages (up to index: 80324478407791) in 0.4166383 seconds</span>
+<span class="q-c"># TIMING: Added 1000 messages (up to index: 80324478408791) in 0.0804952 seconds</span>
+<span class="q-c"># TIMING: Added 1000 messages (up to index: 80324478412791) in 0.0147330 seconds</span></code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <span class="num">07</span>
+  <div class="body">
+    <h4>Ask kdb+</h4>
+    <p>Rows should be arriving in envelope-sized bursts. The last query is the one worth running twice: the
+    <code>quote</code> table carries two timestamps, so their difference is the end-to-end latency of the whole
+    path — queue, adapter, IPC, insert.</p>
+<pre><code>h:hopen `::5000
+
+h"count quote"                                  <span class="q-c">/ rows arriving</span>
+h"-10#quote"                                    <span class="q-c">/ the tail</span>
+h"select cnt:count i by sym from quote"         <span class="q-c">/ shard check</span>
+
+<span class="q-c">/ chrontime is stamped by the Producer, time by kdb+ on insert</span>
+h"select avg (`long$time) - `long$chrontime from quote"</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <span class="num">08</span>
+  <div class="body">
+    <h4>Stop</h4>
+    <p>The adapter has no signal handler; it polls for a stop file and exits gracefully when it appears, which
+    is how it guarantees the in-flight envelope is flushed first. Remember to remove it before restarting, or
+    the next run exits immediately and says nothing about why.</p>
+<pre><code>touch ~/ChronicleQueue/Producer/quote/STOP.txt     <span class="q-c"># adapter drains, then exits</span>
+rm -f  ~/ChronicleQueue/Producer/quote/STOP.txt    <span class="q-c"># before the next run</span></code></pre>
+  </div>
+</div>
+
+<p>
+Now turn the one dial that matters. Raise <code>kdb.envelope.size</code>, restart the adapter, and watch the
+latency query from step 07: larger batches cost each individual message some latency and buy the pipeline a
+great deal of throughput. Where you choose to set it is the entire argument of this section, expressed as a
+single number.
+<span class="snref"></span>
+<span class="sn">Do not benchmark the first second. The repo's own figures show a batch of 1,000 taking ~0.42s
+on the first pass and ~0.015s by the sixth, as the JIT compiles and the mapped pages fault in — which is
+precisely what <code>adapter.runMode=BENCH</code> and its JLBH harness exist to get right.</span>
+</p>
+
+<details class="fold">
+<summary>Warp launch configuration — five tabs, dependency-ordered<span class="meta">chronicle-kdb/kdb-chronicle.yaml · 5 processes</span></summary>
+<pre><code><span class="q-c">---</span>
+name: kdb-chronicle
+windows:
+  - tabs:
+
+      <span class="q-c"># 1 — kdb+ first: the adapter connects to the database before the queue.</span>
+      <span class="q-c">#     dummytp.q loads schemachecker.q and declares the quote/trade tables.</span>
+      - title: KDB
+        color: magenta
+        layout:
+          cwd: ~/code/kdb-chronicle-queue/kdb
+          commands:
+            - exec: q dummytp.q -p 5000
+
+      <span class="q-c"># 2 — Producer: Spring Boot on :9090. Creates the queue directory on first</span>
+      <span class="q-c">#     append, so it must run before any tailer tries to open it.</span>
+      - title: PRODUCER
+        color: green
+        layout:
+          cwd: ~/code/kdb-chronicle-queue/Producer
+          commands:
+            - exec: sleep 3; ./mvnw -q spring-boot:run
+
+      <span class="q-c"># 3 — Adapter: tails the queue, batches, writes to kdb+.</span>
+      - title: ADAPTER
+        color: blue
+        layout:
+          cwd: ~/code/kdb-chronicle-queue/Adapter
+          commands:
+            - exec: sleep 12; ./mvnw -q spring-boot:run
+
+      <span class="q-c"># 4 — Drive the Producer. Swagger UI is the documented route; curl is faster.</span>
+      <span class="q-c">#     /quoteLoader: batches of 1000, no intra-batch gap, repeating every 2000ms.</span>
+      - title: LOAD
+        color: yellow
+        layout:
+          cwd: ~/code/kdb-chronicle-queue
+          commands:
+            - exec: |
+                sleep 18
+                echo "Swagger: http://localhost:9090/producer/swagger-ui.html"
+                echo "start:  curl -X POST 'http://localhost:9090/producer/quoteLoader?noOfMsgs=1000&amp;gap=0&amp;repeatMs=2000'"
+                echo "stop:   touch ~/ChronicleQueue/Producer/quote/STOP.txt   # halts the adapter"
+                exec $SHELL
+
+      <span class="q-c"># 5 — Watch rows land. Focused on open: this is where you type.</span>
+      - title: CTRL
+        color: cyan
+        focus: true
+        layout:
+          cwd: ~/code/kdb-chronicle-queue/kdb
+          commands:
+            - exec: |
+                sleep 22
+                echo 'h:hopen `::5000'
+                echo 'h"count quote"                              / rows arriving'
+                echo 'h"select from quote where i>count[quote]-10" / the tail'
+                echo 'h"select cnt:count i by sym from quote"      / shard check'
+                echo 'h"select avg (`long$chrontime) - `long$time from quote" / queue→kdb lag, ns'
+                q</code></pre>
+</details>
+
+<details class="fold">
+<summary>setup.sh — clone the adapter and de-Windows it<span class="meta">chronicle-kdb/setup.sh</span></summary>
+<pre><code><span class="q-c">#!/usr/bin/env bash</span>
+<span class="q-c"># The upstream repo was written on Windows: its application.properties point</span>
+<span class="q-c"># at C:\ChronicleQueue\... with escaped backslashes. Everything else is</span>
+<span class="q-c"># portable, so the whole port is three sed expressions and a mkdir.</span>
+<span class="q-k">set</span> -euo pipefail
+
+REPO_URL=<span class="q-s">"https://github.com/DataIntellectTech/kdb-chronicle-queue.git"</span>
+CLONE_DIR=<span class="q-s">"${CLONE_DIR:-$HOME/code/kdb-chronicle-queue}"</span>
+QUEUE_DIR=<span class="q-s">"${QUEUE_DIR:-$HOME/ChronicleQueue/Producer/quote}"</span>
+
+git clone --depth 1 <span class="q-s">"$REPO_URL"</span> <span class="q-s">"$CLONE_DIR"</span>
+<span class="q-k">mkdir</span> -p <span class="q-s">"$QUEUE_DIR"</span>
+<span class="q-k">rm</span> -f <span class="q-s">"$QUEUE_DIR/STOP.txt"</span>      <span class="q-c"># a stale stop file exits the adapter silently</span>
+
+<span class="q-c"># sed -i differs between GNU and BSD; pick the incantation once</span>
+<span class="q-k">if</span> sed --version &gt;/dev/null 2&gt;&amp;1; <span class="q-k">then</span> SED_INPLACE=(-i); <span class="q-k">else</span> SED_INPLACE=(-i <span class="q-s">''</span>); <span class="q-k">fi</span>
+
+<span class="q-k">port_props</span>() {
+  <span class="q-k">local</span> f=<span class="q-s">"$1"</span>; [ -f <span class="q-s">"$f"</span> ] || <span class="q-k">return</span> 0
+  [ -f <span class="q-s">"$f.orig"</span> ] || cp <span class="q-s">"$f"</span> <span class="q-s">"$f.orig"</span>        <span class="q-c"># keep the original once</span>
+  sed <span class="q-s">"${SED_INPLACE[@]}"</span> \
+    -e <span class="q-s">"s#C:\\\\ChronicleQueue\\\\Producer\\\\quote#${QUEUE_DIR}#g"</span> \
+    -e <span class="q-s">"s#C:\\ChronicleQueue\\Producer\\quote#${QUEUE_DIR}#g"</span> <span class="q-s">"$f"</span>
+  <span class="q-c"># -E is required. BSD sed has no \| alternation, so the BRE form of this</span>
+  <span class="q-c"># address matches nothing on macOS and \\STOP.txt survives, silently.</span>
+  sed <span class="q-s">"${SED_INPLACE[@]}"</span> -E \
+    -e <span class="q-s">'/^(chronicle\.source|adapter\.stopFile)=/ s#\\\\#/#g'</span> \
+    -e <span class="q-s">'/^(chronicle\.source|adapter\.stopFile)=/ s#\\#/#g'</span> <span class="q-s">"$f"</span>
+}
+
+port_props <span class="q-s">"$CLONE_DIR/Adapter/src/main/resources/application.properties"</span>
+port_props <span class="q-s">"$CLONE_DIR/Producer/src/main/resources/application.properties"</span>
+
+<span class="q-c"># core affinity only does anything useful on Linux</span>
+<span class="q-k">if</span> [ <span class="q-s">"$(uname -s)"</span> != <span class="q-s">"Linux"</span> ]; <span class="q-k">then</span>
+  sed <span class="q-s">"${SED_INPLACE[@]}"</span> -e <span class="q-s">'s/^adapter\.coreAffinity=.*/adapter.coreAffinity=-1/'</span> \
+    <span class="q-s">"$CLONE_DIR/Adapter/src/main/resources/application.properties"</span>
+<span class="q-k">fi</span></code></pre>
+</details>
 
 <p>
 Where does this leave kdb+? Precisely where the next section picks up. Chronicle owns the <em>in-band</em> path:
@@ -1814,7 +2555,7 @@ on <code>execid</code> makes both session-level resends and TP log replays safe 
   <text x="452" y="276" font-size="10.5" fill="#918e86" class="m" text-anchor="middle">subscriber</text>
   <text x="200" y="412" font-size="12" fill="#6b6963" font-style="italic">The plant has exactly one slow consumer — the chain — and the chain has no log to write, so it drains at memory speed whatever TCA does behind it.</text>
 </svg>
-<figcaption>Fig. 9 — Order flow as a first-class tickerplant feed, with TCA quarantined. Two feed handlers
+<figcaption>Fig. 11 — Order flow as a first-class tickerplant feed, with TCA quarantined. Two feed handlers
 normalise the outside world into schema'd rows: the FIX gateway parses ExecutionReports into
 <code>execs</code>, the market-data handler publishes <code>quote</code> and <code>trade</code>. The
 tickerplant does exactly two things — append every message to its log, then publish to subscribers
@@ -1843,7 +2584,8 @@ immutable events and every view of it is a fold — is either true of your schem
 <a href="https://rohanshiloh.github.io/exec-tca-stack/#tables">four-table contract</a> —
 <code>quote</code>, <code>trade</code>, <code>ord</code>, <code>execs</code> — each opening with
 <code>time</code> then <code>sym</code> so <code>tick.q</code> accepts it. Matching the shape is what
-lets the two documents describe one system.</span>
+lets the two documents describe one system. Its <a href="https://rohanshiloh.github.io/exec-tca-stack/#formulas">formulas page</a> sets each benchmark
+beside the q it becomes — they are the same length, which is the whole argument for the stack.</span>
 </p>
 
 <pre><code><span class="q-c">/ immutable event stream — every ExecutionReport, order- and trade-lifecycle alike.</span>
@@ -1874,14 +2616,14 @@ the companion's labs, and reimplementing them alongside would only guarantee the
 <tr><td>Parent/child rollup, order state (§4, Fig. 3)</td><td><span class="labref">A1</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-a1">Exec Fold → Parent State</a></td><td>Folds the exec stream into parent state by <code>parentOrderID</code> — a group-by, never a join</td></tr>
 <tr><td>The <code>qty=cumQty+leaves</code> invariant; resend idempotence (§5)</td><td><span class="labref">A2</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-a2">Invariants, Dedupe, Replay</a></td><td>Dedupes on exec id, asserts the invariant continuously, rebuilds state from the log</td></tr>
 <tr><td>Arrival price and implementation shortfall (§4)</td><td><span class="labref">B1</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-b1">Arrival Price &amp; Shortfall</a></td><td>Stamps arrival mid on every parent; the honest cost number, decomposed</td></tr>
-<tr><td>The benchmark table (§4)</td><td><span class="labref">B2</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-b2">VWAP, TWAP, PWP, Close</a></td><td>Each schedule benchmark, plus <a href="https://rohanshiloh.github.io/exec-tca-stack/#bm-blind">what each one is blind to</a></td></tr>
+<tr><td>The benchmark table (§4)</td><td><span class="labref">B2</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-b2">VWAP, TWAP, PWP, Close</a></td><td>Each schedule benchmark, plus <a href="https://rohanshiloh.github.io/exec-tca-stack/#which-metric">what each one is blind to</a></td></tr>
 <tr><td>Markouts and venue toxicity (§4, Fig. 6)</td><td><span class="labref">C1</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c1">Markouts at 1s / 10s / 60s</a></td><td>The forward-looking family; the curve, not the endpoint</td></tr>
 <tr><td>The venue scorecard; internalisation scored apart (§4)</td><td><span class="labref">C2</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c2">Spread Capture &amp; the Scorecard</a></td><td>Effective and realised spread, fill rate and markout in one row per venue</td></tr>
-<tr><td>Book state and order-flow imbalance at placement (§4)</td><td><span class="labref">C3</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c3">Book State &amp; OFI at Placement</a></td><td>Stamps depth, spread, queue and OFI <a href="https://rohanshiloh.github.io/exec-tca-stack/#inband">in-band</a>, where they are still recoverable</td></tr>
-<tr><td>Opportunity cost (§4)</td><td><span class="labref">D2</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#bm-opp">Pre-trade Cost &amp; Outliers</a></td><td>Weights the drift by the share you failed to fill</td></tr>
+<tr><td>Book state and order-flow imbalance at placement (§4)</td><td><span class="labref">C3</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c3">Book State &amp; OFI at Placement</a></td><td>Stamps depth, spread, queue and OFI <a href="https://rohanshiloh.github.io/exec-tca-stack/#ofi">in-band</a>, where they are still recoverable</td></tr>
+<tr><td>Opportunity cost (§4)</td><td><span class="labref">D2</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-d2">Pre-trade Cost &amp; Outliers</a></td><td>Weights the drift by the share you failed to fill</td></tr>
 <tr><td>The chained-tickerplant firewall (Fig. 9)</td><td><span class="labref">E1</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-e1">The Chained-TP Firewall</a></td><td>Demonstrates the stall, and that the chain absorbs it</td></tr>
 <tr><td>Replay as the recovery path (§7, §8)</td><td><span class="labref">E2 E3</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-e2">Recover a Corrupt Log</a> · <a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-e3">Replay Yesterday</a></td><td>Rescues a half-written log tail; re-runs a past day through live subscribers</td></tr>
-<tr><td>Scorecard feeding the routing table (§4)</td><td><span class="labref">AW</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#aw-controller">From Scorecard to Controller</a></td><td>Closes the loop: measurement becomes venue and algo selection</td></tr>
+<tr><td>Scorecard feeding the routing table (§4)</td><td><span class="labref">AW</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#wheel">From Scorecard to Controller</a></td><td>Closes the loop: measurement becomes venue and algo selection</td></tr>
 </tbody>
 </table>
 
@@ -1890,7 +2632,7 @@ the companion's labs, and reimplementing them alongside would only guarantee the
 <p><a href="https://rohanshiloh.github.io/exec-tca-stack/#mistakes">Ten Ways to Get This Wrong</a> collects the
 failure modes that produce numbers which are arithmetically correct and practically false — VWAP alone, slippage
 without fill rate, one markout horizon, pooling internalised with lit flow.
-<a href="https://rohanshiloh.github.io/exec-tca-stack/#five-rules">Five Rules</a> is the general form of all of
+<a href="https://rohanshiloh.github.io/exec-tca-stack/#rules">Five Rules</a> is the general form of all of
 them: point-in-time always, one sign everywhere, cost never travels alone, no venue ranked on one metric, read
 curves not averages. If you take nothing else across from the companion, take those two pages.</p>
 </div>
@@ -1950,7 +2692,7 @@ Tick Stack in q/KDB+</em>, <a href="https://rohanshiloh.github.io/exec-tca-stack
 a complete tick stack — tickerplant, chained TP, CEP, replay — with labs for arrival and shortfall, VWAP/TWAP/PWP,
 markouts, the venue scorecard, book state and OFI. Its
 <a href="https://rohanshiloh.github.io/exec-tca-stack/#mistakes">Ten Ways to Get This Wrong</a> and
-<a href="https://rohanshiloh.github.io/exec-tca-stack/#five-rules">Five Rules</a> are the practical distillation
+<a href="https://rohanshiloh.github.io/exec-tca-stack/#rules">Five Rules</a> are the practical distillation
 this document points to throughout.</span></p>
 
 <p><span class="au">FIX Trading Community</span>, <em>FIX Protocol Specification</em> (FIX 4.2/4.4/5.0 SP2 and FIX Latest),
@@ -1979,11 +2721,31 @@ Crash cascade in Section 4.</span></p>
 <a href="https://www.dtcc.com">dtcc.com</a>.
 <span class="ref-note">Affirmation cutoffs, novation, netting mechanics, and the T+1 transition (May 2024) in Section 6.</span></p>
 
-<p><span class="au">Chronicle Software / OpenHFT</span>, <em>Chronicle Queue, Chronicle FIX, Chronicle Services</em> —
-product and technical documentation, <a href="https://chronicle.software">chronicle.software</a>; open-source core at
-<a href="https://github.com/OpenHFT/Chronicle-Queue">github.com/OpenHFT/Chronicle-Queue</a>.
-<span class="ref-note">Memory-mapped append-only queues, single-writer principle, µs latency figures, and the
-microservices pattern in Section 7.</span></p>
+<p><span class="au">Chronicle Software / OpenHFT</span>, <em>Chronicle Queue Enterprise</em> — product and technical
+documentation, <a href="https://chronicle.software/products/chronicle-queue">chronicle.software/products/chronicle-queue</a>;
+open-source core at <a href="https://github.com/OpenHFT/Chronicle-Queue">github.com/OpenHFT/Chronicle-Queue</a>.
+<span class="ref-note">Memory-mapped append-only queues, the single-writer principle, roll cycles, Async Mode,
+TCP replication and the cross-language binary format — the architecture of Fig. 8 and the latency figures
+quoted through §7.</span></p>
+
+<p><span class="au">Data Intellect</span> (formerly AquaQ Analytics), <em>Chronicle Queue to kdb+ Adapter</em>,
+<a href="https://github.com/DataIntellectTech/kdb-chronicle-queue">github.com/DataIntellectTech/kdb-chronicle-queue</a>.
+<span class="ref-note">The open-source adapter anatomised in Fig. 10: named tailers, MapStruct mapping, the
+kdb+ envelope, the <code>sentTailer</code> commit offset, and the <code>dummytp.q</code> schema. Everything
+in that subsection is drawn from this source rather than from the announcement.</span></p>
+
+<p><span class="au">Chronicle Software / AquaQ Analytics</span>, <em>Chronicle integrates its latency-optimised
+messaging framework with kdb+</em>, 5 February 2021 —
+<a href="https://dataintellect.com/news/chronicle-software-integrates-chronicle-queue-with-kdb-delivering-high-speed-trading-solution-in-partnership-with-aquaq-analytics/">dataintellect.com</a>,
+also covered by <a href="https://a-teaminsight.com/blog/chronicle-integrates-latency-optimised-messaging-framework-with-kxs-kdb/">A-Team Insight</a>.
+<span class="ref-note">The announcement of the partnership behind the adapter. AquaQ has since been renamed
+Data Intellect, which is why the repository and the press release sit under different names.</span></p>
+
+<p><span class="au">Baeldung</span>, <em>Chronicle Queue</em> —
+<a href="https://www.baeldung.com/java-chronicle-queue">baeldung.com/java-chronicle-queue</a>.
+<span class="ref-note">A short conceptual introduction to excerpt, appender and tailer. Its code targets the
+3.x API (<code>ChronicleQueueBuilder.indexed</code>, <code>startExcerpt</code>); the 5.x line used by the
+adapter differs in naming, not in ideas.</span></p>
 
 <p><span class="au">KX Systems</span>, <em>kdb+ tick architecture</em> — <code>kdb+tick</code> reference implementation and
 whitepapers, <a href="https://code.kx.com/q/architecture/">code.kx.com/q/architecture</a>.
