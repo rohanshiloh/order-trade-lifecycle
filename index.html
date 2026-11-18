@@ -200,6 +200,35 @@
   }
   hr { border: none; border-top: 1px solid var(--rule); margin: 3rem 0; width: 30%; margin-left: 0; }
 
+  /* ---- trilogy masthead ---- */
+  .kicker {
+    font-family: var(--serif); font-variant: small-caps;
+    letter-spacing: .22em; font-size: .72rem;
+    color: var(--ink-faint); margin: 0 0 .55rem;
+  }
+  .kicker .part { color: var(--accent); }
+  h1 .tag {
+    display: block; font-family: var(--serif); font-style: normal;
+    font-variant: small-caps; letter-spacing: .12em;
+    font-size: .95rem; color: var(--ink-dim); margin-top: .35rem;
+  }
+  .trilogy {
+    display: flex; flex-wrap: wrap; gap: 0 1.5rem;
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: .6rem 0; margin: 0 0 1rem;
+    font-size: .78rem; line-height: 1.5;
+  }
+  .trilogy div { flex: 1 1 10rem; min-width: 9rem; }
+  .trilogy .n {
+    font-family: var(--mono); font-size: .68rem;
+    color: var(--ink-faint); letter-spacing: .08em; display: block;
+  }
+  .trilogy .t { color: var(--blue); }
+  .trilogy .here .t { color: var(--accent); }
+  .trilogy .here .n { color: var(--accent); }
+  .trilogy .d { color: var(--ink-faint); font-style: italic; }
+  .trilogy .soon { color: var(--ink-faint); }
+
   /* ---- numbered run steps ---- */
   .step { display: flex; gap: .9rem; margin: 1.5rem 0; align-items: baseline; }
   .step .num {
@@ -250,7 +279,7 @@
     main { width: 100%; }
     .sn, .mn { float: none; margin: .9rem 0 .9rem 1.5rem; width: auto; display: block;
       border-left: 2px solid var(--accent); padding-left: .9rem; }
-    .keybox { float: none; width: auto; margin: 1.2rem 0; font-size: .85rem; }
+    .keybox, .companion { float: none; width: auto; margin: 1.2rem 0; font-size: .85rem; }
     figure.fw, .fw-table { width: 100%; }
   }
 </style>
@@ -259,22 +288,43 @@
 <div class="page">
 <main>
 
-<h1>The Order &amp; Trade Lifecycle</h1>
+<p class="kicker">The Execution Trilogy · <span class="part">Part One</span></p>
+<h1>The Order &amp; Trade Lifecycle<span class="tag">The Map</span></h1>
 <p class="subtitle">How an intention becomes a settled trade: through the OMS, the EMS, and the FIX wire to
 clearing and finality — then rebuilt as software, on Chronicle's microsecond queues and a real-time q/kdb+
 tickerplant</p>
-<p class="byline"><span class="role">Editor</span>Rohan Shiloh Shah ·
-<a href="https://rohanshiloh.github.io/order-trade-lifecycle/"><span class="dom">rohanshiloh.github.io/</span>order-trade-lifecycle</a></p>
+
+<div class="trilogy">
+  <div class="here">
+    <span class="n">PART ONE</span>
+    <span class="t">The Order &amp; Trade Lifecycle</span><br>
+    <span class="d">the map — what the machine is</span>
+  </div>
+  <div>
+    <span class="n">PART TWO</span>
+    <a class="t" href="https://rohanshiloh.github.io/exec-tca-stack/">Anatomy of a Fill</a><br>
+    <span class="d">the territory — how we measure it</span>
+  </div>
+  <div>
+    <span class="n">PART THREE</span>
+    <span class="t soon">Sharded Ticks</span><br>
+    <span class="d">the machine — building it to scale</span>
+  </div>
+</div>
+
+<p class="byline"><a href="https://rohanshiloh.github.io/order-trade-lifecycle/"><span class="dom">rohanshiloh.github.io/</span>order-trade-lifecycle</a></p>
 
 <div class="companion">
-<span class="cp-title">Companion volume</span>
-<p>This paper is the map; <a href="https://rohanshiloh.github.io/exec-tca-stack/"><em>Anatomy of a
-Fill</em></a> is the territory. Where this document explains <em>what</em> the order and trade lifecycle is and
-<em>why</em> it has the shape it does, the companion builds a running tick stack in q/kdb+ that measures it —
-about 400 lines across eight files, with every benchmark derived from the raw events by one
-<a href="https://rohanshiloh.github.io/exec-tca-stack/#pit"><code>aj</code></a> or one
-<code>select … by</code>. Blue pointers in these margins link to the lab that implements whatever is being
-described here.</p>
+<span class="cp-title">The trilogy</span>
+<p>Three papers, one argument. <strong>Part One</strong> — this one — is the <em>map</em>: what the order and
+trade lifecycle is, and why it has the shape it does.
+<a href="https://rohanshiloh.github.io/exec-tca-stack/"><strong>Part Two</strong>, <em>Anatomy of a
+Fill</em></a>, is the <em>territory</em>: a running tick stack in q/kdb+ that measures the thing this paper
+describes, every benchmark one
+<a href="https://rohanshiloh.github.io/exec-tca-stack/#pit"><code>aj</code></a> or one <code>select … by</code>
+away from the raw events. <strong>Part Three</strong>, <em>Sharded Ticks</em>, is the <em>machine</em>:
+building that stack to scale. Blue pointers in these margins link to the lab in Part Two that implements
+whatever is being described here.</p>
 </div>
 
 <!-- ================================================================ -->
@@ -307,9 +357,9 @@ and finally extinguished by fills or cancellation. The <em>trade lifecycle</em> 
 it is the journey of an <em>economic event</em> — an executed quantity at a price — through allocation,
 confirmation, clearing, and settlement, until cash and securities actually move.
 <span class="snref"></span>
-<span class="sn">A useful mental test: anything that can still be cancelled belongs to the order lifecycle;
-anything that must instead be <em>corrected or busted</em> (trade correct, trade cancel) belongs to the trade
-lifecycle. FIX encodes this exact boundary in <code>ExecType(150)</code>: values <code>F/G/H</code> are trade
+<span class="sn">A useful mental test: the boundary is economic exposure. Up to the moment an execution creates
+it, changes are order-state transitions — amend, cancel, expire. Once it exists, changes are handled instead as
+trade corrections, cancels or busts, which is a different mechanism with different participants. FIX encodes this exact boundary in <code>ExecType(150)</code>: values <code>F/G/H</code> are trade
 events, everything else is order-state.</span>
 </p>
 
@@ -379,6 +429,7 @@ this same seam.
 
   <line x1="984" y1="176" x2="331" y2="176" stroke="#7aa9d6" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#arb)"/>
   <text x="658" y="196" font-size="11" fill="#7aa9d6" text-anchor="middle" class="m">ExecutionReport 35=8 — acks, cancels, fills — roll up child → parent</text>
+  <text x="658" y="212" font-size="10.5" fill="#6b6963" text-anchor="middle" class="m">ParentOrderID ─┬─ ClOrdID ─┬─ ExecID   (the three identifiers everything below hangs from)</text>
 
   <line x1="10" y1="228" x2="1140" y2="228" stroke="#2a2e36" stroke-dasharray="4 5"/>
 
@@ -537,6 +588,21 @@ sections — parent order, compliance, slicing, routing, fills, allocation, clea
 left by a single intention crossing that fragmented, regulated, latency-differentiated landscape.
 </p>
 
+<p>
+And it is worth following the causal chain one step further than most accounts do, because it explains why the
+companion paper exists at all. Fragmentation means there is more than one place to trade. More than one place
+means there is a <em>choice</em>, and choices can be made well or badly. Once execution quality varies, and
+varies by decisions a machine is making thousands of times a second, no one can assert that it was good — it
+has to be measured, continuously, against something. That measurement is transaction cost analysis, and it is
+not an accounting afterthought bolted onto trading. It is the direct, unavoidable consequence of a market
+structure that offers the router a decision to get wrong.
+<span class="snref"></span>
+<span class="sn">Which is the hinge between the two papers. This one describes the machine that produces the
+choices; <a href="https://rohanshiloh.github.io/exec-tca-stack/"><em>Anatomy of a Fill</em></a> builds the
+apparatus that scores them. Neither is complete without the other: measurement with no model of the machine
+cannot say <em>what</em> to fix, and a machine with no measurement cannot know it is broken.</span>
+</p>
+
 <!-- ================================================================ -->
 <h2 id="oms">3 · The OMS: owner of the order</h2>
 
@@ -592,6 +658,59 @@ checks) → <em>staging and routing</em> (direct to broker, to an algo wheel, or
 <em>enrichment and hand-off</em> to post-trade. A compliance rejection kills the order before it ever leaves the
 firm; this is the cheapest possible place to stop a bad trade.
 </p>
+
+
+<figure class="cfig">
+<svg viewBox="0 0 700 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pre-trade compliance gates">
+  <defs>
+    <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#d4a24e"/>
+    </marker>
+  </defs>
+
+  <rect x="230" y="10" width="240" height="40" rx="6" fill="#1a1e26" stroke="#d4a24e"/>
+  <text x="350" y="35" fill="#d4a24e" font-size="13" text-anchor="middle">parent order, as entered</text>
+
+  <g font-size="12">
+    <rect x="150" y="76" width="400" height="30" rx="4" fill="#161a21" stroke="#2f3642"/>
+    <text x="166" y="96" fill="#d3d0c8">restricted list</text>
+    <text x="534" y="96" fill="#6b6963" font-size="10.5" text-anchor="end">may we trade this name at all?</text>
+
+    <rect x="150" y="112" width="400" height="30" rx="4" fill="#161a21" stroke="#2f3642"/>
+    <text x="166" y="132" fill="#d3d0c8">concentration &amp; exposure limits</text>
+    <text x="534" y="132" fill="#6b6963" font-size="10.5" text-anchor="end">would this breach the mandate?</text>
+
+    <rect x="150" y="148" width="400" height="30" rx="4" fill="#161a21" stroke="#2f3642"/>
+    <text x="166" y="168" fill="#d3d0c8">short locate</text>
+    <text x="534" y="168" fill="#6b6963" font-size="10.5" text-anchor="end">can we actually deliver?</text>
+
+    <rect x="150" y="184" width="400" height="30" rx="4" fill="#161a21" stroke="#2f3642"/>
+    <text x="166" y="204" fill="#d3d0c8">client authority &amp; capacity</text>
+    <text x="534" y="204" fill="#6b6963" font-size="10.5" text-anchor="end">on whose behalf, and may we?</text>
+
+    <rect x="150" y="220" width="400" height="30" rx="4" fill="#161a21" stroke="#2f3642"/>
+    <text x="166" y="240" fill="#d3d0c8">fat-finger &amp; notional bounds</text>
+    <text x="534" y="240" fill="#6b6963" font-size="10.5" text-anchor="end">is this plausibly what was meant?</text>
+  </g>
+
+  <g stroke="#d4a24e" stroke-width="1.5" fill="none">
+    <line x1="350" y1="54" x2="350" y2="72" marker-end="url(#arg)"/>
+    <line x1="350" y1="254" x2="350" y2="272" marker-end="url(#arg)"/>
+  </g>
+
+  <rect x="230" y="276" width="240" height="40" rx="6" fill="#12211a" stroke="#7fb069"/>
+  <text x="350" y="301" fill="#7fb069" font-size="13" text-anchor="middle">approved — may leave the firm</text>
+
+  <path d="M146 95 L96 95 L96 300" stroke="#c0665e" stroke-width="1.4" fill="none"/>
+  <path d="M146 131 L116 131" stroke="#c0665e" stroke-width="1.4" fill="none"/>
+  <path d="M146 203 L116 203" stroke="#c0665e" stroke-width="1.4" fill="none"/>
+  <path d="M146 239 L116 239" stroke="#c0665e" stroke-width="1.4" fill="none"/>
+  <text x="88" y="316" fill="#c0665e" font-size="11.5" text-anchor="start">rejected here</text>
+  <text x="88" y="330" fill="#6b6963" font-size="10" text-anchor="start">— the cheapest possible outcome</text>
+</svg>
+<figcaption>Pre-trade compliance: a series of gates, any one of which can stop the order. Mizuho's loss and
+Mozer's fraud each failed a different gate on this list.</figcaption>
+</figure>
 
 <table>
 <thead><tr><th>OMS stage</th><th>What happens</th><th>Typical failure mode</th></tr></thead>
@@ -980,6 +1099,10 @@ slice, and stays there for life. Together they buy something precious in a laten
 processes ever need to agree about anything, so there are no locks, no consensus round-trips, and no chance of
 two engines double-working the same book. The cost is that a hot symbol cannot be spread across engines — you
 scale by adding shards, not by splitting one.</p>
+<p>The assumption underneath is that an order's state is confined to one symbol — true of single-stock parents,
+false of pairs, baskets and cash-neutral portfolio algos, which need a view across symbols that no single shard
+holds. Those either shard by portfolio or basket id instead, or keep a thin risk layer above the symbol engines
+that owns the cross-symbol exposure and leaves the per-symbol work where it is.</p>
 </div>
 
 <div class="keybox">
@@ -1101,7 +1224,9 @@ first and that fill is public information. Anyone watching can reach the mid and
 own legs arrive — by the time they land, the displayed size has thinned or gone, and the sweep is filled at
 progressively worse prices. Panel B applies the THOR correction: hold the short-path legs deliberately, release
 the long-path leg first, and time the sends so that every leg lands in the same microsecond. Total elapsed time
-is no better — arguably worse — but the order stops announcing itself in advance. The numbers here are
+is no better — arguably worse — but the order stops announcing itself <em>in advance</em>. It does not become
+invisible: each fill still prints and each quote change still propagates, so information leaks as it always did.
+What the correction removes is the free head start. The numbers here are
 illustrative; real geographic latencies between the New Jersey data centres run to a few hundred microseconds,
 which is ample.</figcaption>
 </figure>
@@ -1174,7 +1299,8 @@ this axis, re-decided for every child order as the book changes.</p>
 <p>Before a router considers any venue, many brokers first check their own book: can this order be crossed
 against house inventory, or against another client's opposite order sitting in the same system? An
 <em>internalised</em> fill never touches the street. It saves exchange fees and leaks nothing to the market,
-and for a client it can be the best available outcome. It also means the broker is taking the other side of
+and for a client it can be the best available outcome. The price can still move afterwards — internalisation is not immunity from impact — but whatever moves it was
+not a venue picking you off. It also means the broker is taking the other side of
 its own client's trade, which is why internalisation carries disclosure obligations, why the SI regime exists
 in Europe, and why internalised fills must be scored <em>separately</em> in any honest TCA — a house fill at
 the touch and a street fill at the touch are not the same trade, and averaging them together hides exactly the
@@ -1205,9 +1331,9 @@ you removed lit liquidity, added it, matched at a dark midpoint, or crossed inte
   <text x="428" y="152" fill="#7aa9d6" font-size="13">routed to the street</text>
   <text x="428" y="170" fill="#918e86" font-size="10.5">liq = "R" / "A" · pays spread and venue fees</text>
 
-  <text x="8" y="156" fill="#c0665e" font-size="11">An internalised fill carries</text>
-  <text x="8" y="172" fill="#c0665e" font-size="11">no spread cost and, by</text>
-  <text x="8" y="188" fill="#c0665e" font-size="11">construction, no markout.</text>
+  <text x="8" y="156" fill="#c0665e" font-size="11">An internalised fill pays no</text>
+  <text x="8" y="172" fill="#c0665e" font-size="11">spread, and carries no adverse</text>
+  <text x="8" y="188" fill="#c0665e" font-size="11">selection from a venue.</text>
 </svg>
 <figcaption>Internalisation: the same order, two entirely different economics — which is why the scorecard must
 hold them apart rather than averaging them together.</figcaption>
@@ -1286,24 +1412,6 @@ optimises the wrong thing precisely.</span>
 </table>
 
 <div class="keybox">
-<span class="kb-title">Key concept — cost never travels alone</span>
-<p>A slippage number without its fill rate beside it is not a result, it is half of one: +4 bps on 20% filled
-is a worse outcome than −1 bps on 98%, and the first looks better in every report ever written. The same holds
-for a mean without its median — one busted print at −400 bps moves a venue's average and leaves its median
-untouched, so when the two disagree you have a tail, not a trend. Publish the qualifier in the same row as the
-number, or someone will eventually quote the number alone.</p>
-</div>
-
-<div class="keybox">
-<span class="kb-title">Key concept — opportunity cost</span>
-<p>Every benchmark that scores only the shares you traded quietly rewards an algo for <em>not</em> trading: do
-nothing, fill nothing, and your slippage is immaculate. The missing term is what the unfilled remainder would
-have cost. Take the drift over the working window, weight it by the fraction you failed to execute, and report
-it alongside the realised cost — an order that captured a beautiful price on 30% of a position while the market
-ran away from the other 70% has not done well, and only this number says so.</p>
-</div>
-
-<div class="keybox">
 <span class="kb-title">Key concept — slippage</span>
 <p>Execution price versus a reference price, in basis points, signed so that positive means you paid. The
 reference defines the metric: <em>arrival price</em> (mid at parent-order creation) gives implementation
@@ -1343,7 +1451,6 @@ computes fill by fill.</p>
 <figcaption>Slippage: the distance between what you got and the price you are being measured against.</figcaption>
 </figure>
 
-
 <div class="keybox">
 <span class="kb-title">Key concept — drift</span>
 <p>The adverse trend component of price movement over the execution horizon — the market walking away from you
@@ -1380,7 +1487,6 @@ deviation from the target participation curve — an execution-quality alarm rat
 individual fill was executed.</figcaption>
 </figure>
 
-
 <div class="keybox">
 <span class="kb-title">Key concept — reversion</span>
 <p>What price does <em>after</em> your last fill. If you bought, pushed the price up, and it falls back within
@@ -1416,6 +1522,24 @@ detected.</p>
 <figcaption>Reversion: what the price does after you stop, and the only diagnostic that separates paying for
 liquidity from being picked off.</figcaption>
 </figure>
+
+<div class="keybox">
+<span class="kb-title">Key concept — cost never travels alone</span>
+<p>A slippage number without its fill rate beside it is not a result, it is half of one: +4 bps on 20% filled
+is a worse outcome than −1 bps on 98%, and the first looks better in every report ever written. The same holds
+for a mean without its median — one busted print at −400 bps moves a venue's average and leaves its median
+untouched, so when the two disagree you have a tail, not a trend. Publish the qualifier in the same row as the
+number, or someone will eventually quote the number alone.</p>
+</div>
+
+<div class="keybox">
+<span class="kb-title">Key concept — opportunity cost</span>
+<p>Every benchmark that scores only the shares you traded quietly rewards an algo for <em>not</em> trading: do
+nothing, fill nothing, and your slippage is immaculate. The missing term is what the unfilled remainder would
+have cost. Take the drift over the working window, weight it by the fraction you failed to execute, and report
+it alongside the realised cost — an order that captured a beautiful price on 30% of a position while the market
+ran away from the other 70% has not done well, and only this number says so.</p>
+</div>
 
 
 <h3 id="markouts">Markouts: what the fill looks like afterwards</h3>
@@ -1526,6 +1650,137 @@ cannot be reconstructed faithfully afterwards, and without them slippage analysi
 but never account for it.</p>
 </div>
 
+<h3 id="attachment">Where every number attaches</h3>
+
+<p>
+It is worth pausing here, because this subsection and the last have been describing measurements without ever
+saying what they are measurements <em>of</em>. Every metric in transaction cost analysis belongs to exactly one
+level of the hierarchy in Figure 3, and most arguments about execution quality are really arguments between
+people reading numbers from different levels. Arrival slippage is a property of the <em>parent</em> — it
+indicts the decision and the delay. Schedule adherence belongs to the <em>algoChild</em>. Queue position and
+spread paid belong to the <em>placement</em>. Markouts belong to the <em>venue</em>. Settlement efficiency
+belongs to the <em>trade</em>, long after anyone in the front office has stopped looking.
+</p>
+
+<figure class="fw" id="fig-attachment">
+<svg viewBox="0 0 1150 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lifecycle ownership and where each metric attaches">
+  <defs>
+    <marker id="ars" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3a4150"/>
+    </marker>
+  </defs>
+
+  <text x="150" y="26" fill="#6b6963" font-size="12" letter-spacing="1.3" text-anchor="end">OWNED BY</text>
+  <text x="430" y="26" fill="#d4a24e" font-size="12" letter-spacing="1.3" text-anchor="middle">THE OBJECT</text>
+  <text x="700" y="26" fill="#7aa9d6" font-size="12" letter-spacing="1.3">WHAT IT IS MEASURED BY</text>
+  <text x="1140" y="26" fill="#6b6963" font-size="12" letter-spacing="1.3" text-anchor="end">LIVES FOR</text>
+
+  <line x1="430" y1="40" x2="430" y2="516" stroke="#2a2e36" stroke-width="2"/>
+
+  <g font-size="13">
+    <!-- rows: y, owner, object, sub, metric, metric2, life, colour -->
+    <!-- 1 intent -->
+    <text x="150" y="66" fill="#918e86" text-anchor="end" font-size="11.5">portfolio manager</text>
+    <circle cx="430" cy="62" r="7" fill="#0e1013" stroke="#6b6963" stroke-width="2"/>
+    <text x="452" y="60" fill="#d3d0c8">intent</text>
+    <text x="452" y="76" fill="#6b6963" font-size="10.5">a decision, not yet an order</text>
+    <text x="1140" y="66" fill="#6b6963" font-size="10.5" text-anchor="end">—</text>
+
+    <!-- 2 parent -->
+    <text x="150" y="128" fill="#918e86" text-anchor="end" font-size="11.5">OMS</text>
+    <circle cx="430" cy="124" r="9" fill="#241c10" stroke="#d4a24e" stroke-width="2"/>
+    <text x="452" y="122" fill="#d4a24e">parent order</text>
+    <text x="452" y="138" fill="#6b6963" font-size="10.5">the full intention · poid = oid</text>
+    <text x="700" y="118" fill="#7aa9d6" font-size="11.5">arrival slippage · implementation shortfall</text>
+    <text x="700" y="134" fill="#6b6963" font-size="10.5">delay cost · opportunity cost · fill rate</text>
+    <text x="1140" y="128" fill="#6b6963" font-size="10.5" text-anchor="end">hours</text>
+
+    <!-- 3 algoChild -->
+    <text x="150" y="190" fill="#918e86" text-anchor="end" font-size="11.5">trading engine</text>
+    <circle cx="430" cy="186" r="9" fill="#161d26" stroke="#7aa9d6" stroke-width="2"/>
+    <text x="452" y="184" fill="#7aa9d6">algoChild</text>
+    <text x="452" y="200" fill="#6b6963" font-size="10.5">what to work, now · poid ≠ oid</text>
+    <text x="700" y="180" fill="#7aa9d6" font-size="11.5">schedule adherence · participation drift</text>
+    <text x="700" y="196" fill="#6b6963" font-size="10.5">realised vs target volume curve</text>
+    <text x="1140" y="190" fill="#6b6963" font-size="10.5" text-anchor="end">seconds</text>
+
+    <!-- 4 placement -->
+    <text x="150" y="252" fill="#918e86" text-anchor="end" font-size="11.5">smart order router</text>
+    <circle cx="430" cy="248" r="9" fill="#161d26" stroke="#7aa9d6" stroke-width="2"/>
+    <text x="452" y="246" fill="#7aa9d6">placement</text>
+    <text x="452" y="262" fill="#6b6963" font-size="10.5">what a venue sees</text>
+    <text x="700" y="242" fill="#7aa9d6" font-size="11.5">queue position · spread paid · fees and rebates</text>
+    <text x="700" y="258" fill="#6b6963" font-size="10.5">book state and OFI at the instant of placing</text>
+    <text x="1140" y="252" fill="#6b6963" font-size="10.5" text-anchor="end">milliseconds</text>
+
+    <!-- 5 fill -->
+    <text x="150" y="314" fill="#918e86" text-anchor="end" font-size="11.5">venue</text>
+    <circle cx="430" cy="310" r="9" fill="#12211a" stroke="#7fb069" stroke-width="2"/>
+    <text x="452" y="308" fill="#7fb069">fill</text>
+    <text x="452" y="324" fill="#6b6963" font-size="10.5">ExecType = F · immutable</text>
+    <text x="700" y="304" fill="#7aa9d6" font-size="11.5">effective spread · realised spread · markouts</text>
+    <text x="700" y="320" fill="#6b6963" font-size="10.5">1s / 10s / 60s · aggregated by venue and liq</text>
+    <text x="1140" y="314" fill="#6b6963" font-size="10.5" text-anchor="end">forever</text>
+
+    <!-- seam -->
+    <line x1="150" y1="344" x2="1140" y2="344" stroke="#2a2e36" stroke-dasharray="5 4"/>
+    <text x="700" y="360" fill="#6b6963" font-size="10.5" font-style="italic">— economic exposure exists from here on; changes are corrections, not amendments —</text>
+
+    <!-- 6 allocation -->
+    <text x="150" y="404" fill="#918e86" text-anchor="end" font-size="11.5">middle office</text>
+    <circle cx="430" cy="400" r="9" fill="#1a1e26" stroke="#3a4150" stroke-width="2"/>
+    <text x="452" y="398" fill="#d3d0c8">allocation</text>
+    <text x="452" y="414" fill="#6b6963" font-size="10.5">one trade becomes many</text>
+    <text x="700" y="394" fill="#7aa9d6" font-size="11.5">same-day allocation rate</text>
+    <text x="700" y="410" fill="#6b6963" font-size="10.5">average-price consistency across accounts</text>
+    <text x="1140" y="404" fill="#6b6963" font-size="10.5" text-anchor="end">T, evening</text>
+
+    <!-- 7 confirmed -->
+    <text x="150" y="452" fill="#918e86" text-anchor="end" font-size="11.5">broker · central matching</text>
+    <circle cx="430" cy="448" r="9" fill="#1a1e26" stroke="#3a4150" stroke-width="2"/>
+    <text x="452" y="446" fill="#d3d0c8">affirmed trade</text>
+    <text x="452" y="462" fill="#6b6963" font-size="10.5">bilateral agreement · locked in</text>
+    <text x="700" y="442" fill="#7aa9d6" font-size="11.5">affirmation rate by 9:00pm ET</text>
+    <text x="700" y="458" fill="#6b6963" font-size="10.5">exception count · time to affirm</text>
+    <text x="1140" y="452" fill="#6b6963" font-size="10.5" text-anchor="end">T + hours</text>
+
+    <!-- 8 cleared -->
+    <text x="150" y="500" fill="#918e86" text-anchor="end" font-size="11.5">CCP</text>
+    <circle cx="430" cy="496" r="9" fill="#241c10" stroke="#d4a24e" stroke-width="2"/>
+    <text x="452" y="494" fill="#d4a24e">cleared obligation</text>
+    <text x="452" y="510" fill="#6b6963" font-size="10.5">novated and netted</text>
+    <text x="700" y="490" fill="#7aa9d6" font-size="11.5">netting ratio · margin consumed</text>
+    <text x="700" y="506" fill="#6b6963" font-size="10.5">gross to net compression</text>
+    <text x="1140" y="500" fill="#6b6963" font-size="10.5" text-anchor="end">T → T+1</text>
+
+    <!-- 9 settled -->
+    <text x="150" y="542" fill="#918e86" text-anchor="end" font-size="11.5">custodian · depository</text>
+    <circle cx="430" cy="538" r="9" fill="#12211a" stroke="#7fb069" stroke-width="2"/>
+    <text x="452" y="536" fill="#7fb069">settled position</text>
+    <text x="700" y="536" fill="#7aa9d6" font-size="11.5">settlement efficiency · fail rate · buy-in cost</text>
+    <text x="1140" y="542" fill="#6b6963" font-size="10.5" text-anchor="end">final</text>
+  </g>
+</svg>
+<figcaption>Fig. 7 — The spine of both papers. Read down the centre and you have the lifecycle: an intention
+becomes a parent order, which becomes algo decisions, which become placements, which become fills, which become
+allocations, affirmations, cleared obligations and finally a settled position that cannot be undone. Read left
+and you have ownership — which system is accountable when that object is wrong. Read right and you have the
+measurement, and this is the column that matters most, because <em>every metric belongs to exactly one row</em>.
+Arrival slippage indicts the parent: the decision and the delay. Participation drift indicts the algo. Queue
+position and spread paid indict the router. Markouts indict the venue. Mix rows and you produce the argument
+every execution desk has had — the algo team and the routing team holding the same number and each reading it
+as evidence about the other. The dashed line is the seam of §1: above it everything is still cancellable, below
+it everything is economically real.</figcaption>
+</figure>
+
+<p>
+The practical use of this is narrower than it looks and more valuable. When a number is bad, the first question
+is not <em>why</em> but <em>whose row is this</em> — and the second is whether the adjacent rows agree. Arrival
+slippage poor while participation tracks the curve and markouts sit near zero is a decision-timing problem, not
+an execution one. Markouts negative on one venue while queue position and spread are fine everywhere else is a
+routing problem with a single-line fix. The hierarchy turns a vague complaint into a located one.
+</p>
+
 <h3 id="oms-vs-ems">Two systems, two temperaments</h3>
 
 <p>
@@ -1628,6 +1883,17 @@ in-flight amends, and unsolicited cancels is most of the difficulty of order-sta
 misordered an execution report.</span>
 </p>
 
+<div class="keybox">
+<span class="kb-title">Key concept — never key on ClOrdID</span>
+<p><code>ClOrdID(11)</code> is not an order identity, it is a <em>message</em> identity: every cancel and every
+amend mints a fresh one and points <code>OrigClOrdID(41)</code> at its predecessor. Key your internal order
+table on it and the first cancel-replace orphans every fill that came before — cumulative quantity resets, the
+blotter disagrees with the broker, and the reconciliation lands at midnight. Key instead on something immutable
+for the order's whole life: your own <code>oid</code>, or the venue's <code>OrderID(37)</code>, with the
+<code>ClOrdID</code> chain stored alongside as lineage. This is why the schema in §8 keys <code>ord</code> on
+<code>oid</code> and nothing else.</p>
+</div>
+
 <figure class="fw" id="fig-state-machine">
 <svg viewBox="0 0 1150 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FIX order state machine">
   <defs>
@@ -1679,7 +1945,7 @@ misordered an execution report.</span>
   <g stroke="#918e86" stroke-width="1.4" fill="none">
     <line x1="170" y1="168" x2="248" y2="168" marker-end="url(#ar3)"/>
     <line x1="380" y1="168" x2="468" y2="168" marker-end="url(#ar3)"/>
-    <line x1="315" y1="140" x2="322" y2="74"  marker-end="url(#ar3r)" stroke="#c0665e"/>
+    <line x1="120" y1="140" x2="258" y2="68"  marker-end="url(#ar3r)" stroke="#c0665e"/>
     <line x1="330" y1="196" x2="490" y2="276" marker-end="url(#ar3)"/>
     <line x1="575" y1="196" x2="560" y2="270" marker-end="url(#ar3)"/>
     <line x1="345" y1="196" x2="720" y2="292" marker-end="url(#ar3)"/>
@@ -1697,13 +1963,13 @@ misordered an execution report.</span>
     <text x="560" y="86" fill="#7fb069">150=F</text>
     <text x="704" y="160" fill="#7fb069">150=F final</text>
     <text x="570" y="122" fill="#7fb069">150=F full</text>
-    <text x="292" y="105" fill="#c0665e">150=8</text>
+    <text x="168" y="92" fill="#c0665e">150=8 reject</text>
     <text x="404" y="252">150=4</text>
     <text x="596" y="238">150=4</text>
     <text x="640" y="270">150=C (TIF)</text>
   </g>
 </svg>
-<figcaption>Fig. 7 — The canonical FIX order state machine, as maintained independently — and, one hopes,
+<figcaption>Fig. 8 — The canonical FIX order state machine, as maintained independently — and, one hopes,
 identically — by the OMS, the EMS, the broker's gateway, and the exchange. An order is born into
 <em>PendingNew</em> (<code>39=A</code>) the moment it is sent and before anyone has acknowledged it; the ack
 (<code>ExecType=0</code>) moves it to <em>New</em>, a rejection (<code>ExecType=8</code>) kills it on arrival.
@@ -1716,6 +1982,70 @@ through <em>PendingReplace</em> and returns an <code>ExecType=5</code>, critical
 quantities across the ClOrdID chain</em> — the replaced order keeps its fills. The terminal states
 (<em>Filled</em>, <em>Canceled</em>, <em>Expired</em>, <em>Rejected</em>) are absorbing: nothing leaves them
 except a trade correction or bust, which belongs to the other lifecycle entirely.</figcaption>
+</figure>
+
+
+<figure class="fw" id="fig-clordid">
+<svg viewBox="0 0 1150 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ClOrdID chain across fill, amend and cancel">
+  <defs>
+    <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#d4a24e"/>
+    </marker>
+  </defs>
+
+  <rect x="10" y="40" width="1130" height="34" rx="5" fill="#161a21" stroke="#2a2e36"/>
+  <text x="26" y="62" fill="#d4a24e" font-size="12.5" class="m">oid = A7F3   —   one immutable identity, from first send to terminal state</text>
+
+  <g class="m" font-size="11.5">
+    <rect x="10" y="100" width="250" height="86" rx="6" fill="#1a1e26" stroke="#d4a24e"/>
+    <text x="26" y="122" fill="#d4a24e" font-size="12">35=D  NewOrderSingle</text>
+    <text x="26" y="142" fill="#d3d0c8">ClOrdID = C1</text>
+    <text x="26" y="160" fill="#918e86">OrderQty 1000</text>
+    <text x="26" y="177" fill="#6b6963">cum 0 · leaves 1000</text>
+
+    <rect x="300" y="100" width="250" height="86" rx="6" fill="#12211a" stroke="#7fb069"/>
+    <text x="316" y="122" fill="#7fb069" font-size="12">150=F  partial fill</text>
+    <text x="316" y="142" fill="#d3d0c8">ExecID = E1</text>
+    <text x="316" y="160" fill="#918e86">LastQty 300</text>
+    <text x="316" y="177" fill="#6b6963">cum 300 · leaves 700</text>
+
+    <rect x="590" y="100" width="250" height="86" rx="6" fill="#1a1e26" stroke="#d4a24e"/>
+    <text x="606" y="122" fill="#d4a24e" font-size="12">35=G  amend to 800</text>
+    <text x="606" y="142" fill="#d3d0c8">ClOrdID = C2</text>
+    <text x="606" y="160" fill="#7aa9d6">OrigClOrdID = C1</text>
+    <text x="606" y="177" fill="#6b6963">cum 300 · leaves 500</text>
+
+    <rect x="880" y="100" width="260" height="86" rx="6" fill="#1a1e26" stroke="#3a4150"/>
+    <text x="896" y="122" fill="#d3d0c8" font-size="12">35=F  cancel the rest</text>
+    <text x="896" y="142" fill="#d3d0c8">ClOrdID = C3</text>
+    <text x="896" y="160" fill="#7aa9d6">OrigClOrdID = C2</text>
+    <text x="896" y="177" fill="#6b6963">cum 300 · leaves 0</text>
+  </g>
+
+  <g stroke="#d4a24e" stroke-width="1.6" fill="none">
+    <line x1="266" y1="143" x2="294" y2="143" marker-end="url(#arc)"/>
+    <line x1="556" y1="143" x2="584" y2="143" marker-end="url(#arc)"/>
+    <line x1="846" y1="143" x2="874" y2="143" marker-end="url(#arc)"/>
+  </g>
+
+  <!-- lineage arcs -->
+  <path d="M700 192 C 700 232 160 232 160 192" stroke="#7aa9d6" stroke-width="1.3" fill="none" stroke-dasharray="4 3" marker-end="url(#arc)"/>
+  <text x="430" y="236" fill="#7aa9d6" font-size="11" text-anchor="middle" class="m">OrigClOrdID points back — this is lineage, not identity</text>
+  <path d="M1000 192 C 1000 262 710 262 710 196" stroke="#7aa9d6" stroke-width="1.3" fill="none" stroke-dasharray="4 3" marker-end="url(#arc)"/>
+
+  <line x1="10" y1="284" x2="1140" y2="284" stroke="#2a2e36"/>
+  <text x="10" y="306" fill="#918e86" font-size="12"><tspan fill="#7fb069">OrderQty = CumQty + LeavesQty</tspan> holds at every step — 1000=0+1000, 1000=300+700, 800=300+500, 300=300+0 —</text>
+  <text x="10" y="324" fill="#918e86" font-size="12">and <tspan fill="#c0665e">CumQty never resets</tspan>, even though ClOrdID changed twice. Key your table on ClOrdID and you lose those 300 shares.</text>
+</svg>
+<figcaption>Fig. 9 — One order, three ClOrdIDs. Each cancel or amend mints a new <code>ClOrdID(11)</code> and
+points <code>OrigClOrdID(41)</code> back at the one it supersedes, so the chain is lineage rather than
+identity: the order itself never changed, only the messages about it. Notice what survives the amend — the
+quantity is reduced from 1000 to 800, but the 300 shares already executed stay executed, and
+<code>LeavesQty</code> absorbs the difference. That is the whole reason the invariant is worth asserting
+continuously: it is the cheapest possible detector for the single most common state-machine bug, which is a
+replace that quietly drops its predecessor's fills. The <code>oid</code> band across the top is what an internal
+system should actually key on — assigned once, never reissued, and the only thing in this diagram that is
+stable from the first message to the last.</figcaption>
 </figure>
 
 <div class="keybox">
@@ -1767,6 +2097,76 @@ once a courtesy, is now structural.</span>
 </tbody>
 </table>
 
+
+<h3 id="allocation">Allocation: one trade becomes many</h3>
+
+<p>
+The first thing that happens to a fill is that it stops being one thing. A block worked for eight funds is, the
+moment it is done, eight trades — different accounts, different custodians, different standing settlement
+instructions, each from here on settling independently and each capable of failing on its own. Allocation is
+the step that performs that division, and it is less arithmetic than it looks: the quantities rarely divide
+cleanly, average pricing has to be applied consistently so no fund is advantaged by the order in which fills
+arrived, and the residual share has to go somewhere defensible.
+<span class="snref"></span>
+<span class="sn">Hence the preference for average-price allocation: every account receives the same
+<code>avgPx</code> regardless of which individual prints landed when. The alternative — handing specific fills
+to specific accounts — is legal, occasionally required, and a standing invitation to allegations of
+cherry-picking.</span>
+</p>
+
+<p>
+The deadline is what makes it hard. Under T+1 the allocation must be sent, the broker must confirm, and the
+investment manager must affirm, all before 9:00pm ET on trade date, because affirmed trades are what the
+depository's overnight cycle consumes. Miss it and the trade settles late or by exception, at cost. An
+allocation process that was a next-morning task for decades is now an evening one, and the compression is why
+central matching exists at all.
+</p>
+
+<h3 id="affirmation">Confirmation, affirmation, and what "locked in" means</h3>
+
+<p>
+Confirmation is the broker stating the economics it believes it executed; affirmation is the investment manager
+agreeing. Until both have happened the trade is <em>alleged</em> — one side asserts it, the other has not yet
+accepted — and an alleged trade cannot settle. Central matching platforms collapse the two steps into one by
+matching allocation against confirmation automatically, so that the normal case produces an affirmed trade with
+no human in the path and the exceptions are what reach a person.
+<span class="snref"></span>
+<span class="sn">The vocabulary is worth keeping straight because the industry uses it loosely.
+<em>Confirmed</em> is one-sided. <em>Affirmed</em> is bilateral agreement on the economics. <em>Locked in</em>
+means the trade has been accepted for clearing and can no longer be amended by either party — only corrected or
+busted through the venue's own process.</span>
+</p>
+
+<p>
+Once a trade is locked in, something subtle has changed: it is no longer a claim one party has against another,
+it is an obligation the clearing system has taken responsibility for sequencing. That hand-off is the real
+boundary of the middle office.
+</p>
+
+<h3 id="clearing">Clearing: novation, netting, and margin</h3>
+
+<p>
+Clearing performs two compressions that are routinely conflated and are in fact unrelated.
+<em>Novation</em> is legal: the CCP interposes itself so that one trade between two members becomes two trades
+against the CCP, which is thereafter buyer to every seller and seller to every buyer. Nobody's economics move;
+everybody's <em>counterparty</em> changes, from a name they did not choose to a single margined entity.
+<em>Netting</em> is arithmetic: within one security, one member and one settlement date, purchases and sales
+offset, and only the residual is delivered. The first compresses risk, the second compresses movement.
+</p>
+
+<p>
+Margin is what makes novation survivable. Having made itself the counterparty to everyone, the CCP must be able
+to absorb a member's failure without passing the loss on, so it collects initial margin against potential future
+exposure and variation margin against today's moves, backed by a default fund and a waterfall specifying whose
+money is consumed in what order. The arrangement is extraordinarily effective and not free — as §6's opening
+examples show, the same machinery that let Lehman's cleared book be auctioned off in weeks is the machinery
+whose margin call forced brokers to restrict buying in January 2021.
+<span class="snref"></span>
+<span class="sn">This is the quiet argument for shortening the settlement cycle. Margin scales with the exposure
+horizon; halve the horizon and you roughly halve what the CCP must demand when volatility spikes. T+1 was not
+primarily a convenience measure.</span>
+</p>
+
 <p>
 Clearing is the great risk-compression step, and its value is easiest to see on the days it was tested. When
 Lehman Brothers failed in September 2008, its cleared interest-rate book at LCH — some $9 trillion notional
@@ -1784,11 +2184,142 @@ halves the CCP's exposure horizon and hence the margin it must demand in a squee
 cycle in May 2024 largely so that January 2021 could not repeat at the same scale.</span>
 </p>
 
+
+<figure class="fw" id="fig-netting">
+<svg viewBox="0 0 1150 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bilateral web, novation, and continuous net settlement">
+  <defs>
+    <marker id="arn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#918e86"/>
+    </marker>
+    <marker id="arn2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#d4a24e"/>
+    </marker>
+    <marker id="arn3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7fb069"/>
+    </marker>
+  </defs>
+
+  <!-- ============ PANEL 1 ============ -->
+  <text x="10" y="24" fill="#c0665e" font-size="12.5" letter-spacing="1.2">1 · GROSS BILATERAL — EVERY TRADE IS AN EXPOSURE</text>
+  <g font-size="12" fill="#d3d0c8" text-anchor="middle">
+    <circle cx="80"  cy="112" r="30" fill="#1a1e26" stroke="#3a4150"/><text x="80"  y="116">You</text>
+    <circle cx="240" cy="64"  r="27" fill="#1a1e26" stroke="#3a4150"/><text x="240" y="68">B</text>
+    <circle cx="300" cy="160" r="27" fill="#1a1e26" stroke="#3a4150"/><text x="300" y="164">C</text>
+    <circle cx="150" cy="222" r="27" fill="#1a1e26" stroke="#3a4150"/><text x="150" y="226">D</text>
+  </g>
+  <g stroke="#918e86" stroke-width="1.2" fill="none">
+    <line x1="108" y1="100" x2="214" y2="72"  marker-end="url(#arn)"/>
+    <line x1="108" y1="124" x2="272" y2="155" marker-end="url(#arn)"/>
+    <line x1="96"  y1="140" x2="136" y2="194" marker-end="url(#arn)"/>
+    <line x1="252" y1="89"  x2="292" y2="134" marker-end="url(#arn)"/>
+    <line x1="276" y1="176" x2="176" y2="212" marker-end="url(#arn)"/>
+    <line x1="218" y1="78"  x2="168" y2="198" marker-end="url(#arn)"/>
+  </g>
+  <g font-size="9.5" fill="#6b6963" class="m">
+    <text x="150" y="74">buy 400k</text>
+    <text x="178" y="146">sell 300k</text>
+    <text x="78"  y="180">buy 600k</text>
+  </g>
+  <text x="10" y="276" fill="#918e86" font-size="11">Hundreds of trades, each a promise to a named</text>
+  <text x="10" y="292" fill="#918e86" font-size="11">counterparty. If one fails, you are exposed to</text>
+  <text x="10" y="308" fill="#918e86" font-size="11">that name, for that amount, for the whole cycle.</text>
+  <text x="10" y="332" fill="#c0665e" font-size="11">Gross obligation: 1,900k shares moving.</text>
+
+  <line x1="370" y1="36" x2="370" y2="350" stroke="#2a2e36" stroke-dasharray="4 4"/>
+
+  <!-- ============ PANEL 2 ============ -->
+  <text x="398" y="24" fill="#d4a24e" font-size="12.5" letter-spacing="1.2">2 · NOVATION — THE CCP STEPS INTO THE MIDDLE</text>
+  <g font-size="12" fill="#d3d0c8" text-anchor="middle">
+    <circle cx="470" cy="112" r="28" fill="#1a1e26" stroke="#3a4150"/><text x="470" y="116">You</text>
+    <circle cx="690" cy="64"  r="25" fill="#1a1e26" stroke="#3a4150"/><text x="690" y="68">B</text>
+    <circle cx="700" cy="170" r="25" fill="#1a1e26" stroke="#3a4150"/><text x="700" y="174">C</text>
+    <circle cx="520" cy="228" r="25" fill="#1a1e26" stroke="#3a4150"/><text x="520" y="232">D</text>
+    <circle cx="585" cy="140" r="40" fill="#241c10" stroke="#d4a24e" stroke-width="1.6"/>
+    <text x="585" y="137" fill="#d4a24e" font-size="13">CCP</text>
+    <text x="585" y="153" fill="#918e86" font-size="9">NSCC</text>
+  </g>
+  <g stroke="#d4a24e" stroke-width="1.4" fill="none">
+    <line x1="498" y1="118" x2="546" y2="133" marker-end="url(#arn2)"/>
+    <line x1="624" y1="128" x2="668" y2="82"  marker-end="url(#arn2)"/>
+    <line x1="622" y1="152" x2="678" y2="166" marker-end="url(#arn2)"/>
+    <line x1="563" y1="176" x2="533" y2="206" marker-end="url(#arn2)"/>
+  </g>
+  <text x="398" y="276" fill="#918e86" font-size="11">One original trade becomes two: the CCP is now</text>
+  <text x="398" y="292" fill="#918e86" font-size="11">buyer to every seller and seller to every buyer.</text>
+  <text x="398" y="308" fill="#918e86" font-size="11">You no longer face B, C or D — you face the CCP,</text>
+  <text x="398" y="324" fill="#918e86" font-size="11">which faces them, collateralised by margin.</text>
+  <text x="398" y="348" fill="#d4a24e" font-size="11">Counterparty risk: many names → one.</text>
+
+  <line x1="758" y1="36" x2="758" y2="350" stroke="#2a2e36" stroke-dasharray="4 4"/>
+
+  <!-- ============ PANEL 3 ============ -->
+  <text x="786" y="24" fill="#7fb069" font-size="12.5" letter-spacing="1.2">3 · CNS NETTING — ONE OBLIGATION SURVIVES</text>
+  <g font-family="monospace" font-size="12">
+    <text x="786" y="62" fill="#7fb069">bought   1,000,000</text>
+    <text x="786" y="82" fill="#c0665e">sold      −900,000</text>
+    <line x1="786" y1="92" x2="1010" y2="92" stroke="#3a4150"/>
+    <text x="786" y="112" fill="#d3d0c8">net        100,000</text>
+  </g>
+  <text x="786" y="140" fill="#6b6963" font-size="10.5">same CUSIP, same member, same day</text>
+
+  <rect x="786" y="162" width="330" height="76" rx="8" fill="#12211a" stroke="#7fb069"/>
+  <text x="951" y="190" fill="#7fb069" font-size="13" text-anchor="middle">Settlement at the depository</text>
+  <text x="951" y="211" fill="#918e86" font-size="10.5" text-anchor="middle">DTC · delivery versus payment · T+1</text>
+  <text x="951" y="228" fill="#918e86" font-size="10.5" text-anchor="middle">one net delivery of 100,000 shares</text>
+  <line x1="951" y1="122" x2="951" y2="156" stroke="#7fb069" stroke-width="1.5" marker-end="url(#arn3)"/>
+
+  <text x="786" y="276" fill="#918e86" font-size="11">Hundreds of trades in a name collapse into a</text>
+  <text x="786" y="292" fill="#918e86" font-size="11">single delivery. Nothing about the economics</text>
+  <text x="786" y="308" fill="#918e86" font-size="11">changes — what shrinks is the quantity that has</text>
+  <text x="786" y="324" fill="#918e86" font-size="11">to physically move, and the risk while it does.</text>
+  <text x="786" y="348" fill="#7fb069" font-size="11">Gross 1,900k → net 100k. Over 90% compressed.</text>
+</svg>
+<figcaption>Fig. 10 — The two compressions that define post-trade. Panel 1 is the world without a clearing
+house: every trade is a bilateral promise to a named counterparty, and the total exposure is the sum of all of
+them for as long as settlement takes. Panel 2 is <em>novation</em> — the legal substitution by which one trade
+between you and B becomes two trades, you-to-CCP and CCP-to-B. The economics are untouched; what changes is who
+you are exposed to, and the answer is now a single, margined, heavily capitalised entity instead of a web of
+names you did not choose. Panel 3 is <em>netting</em>: within one security, one member and one day, buys and
+sells offset, and only the residual is delivered. A million bought and nine hundred thousand sold settle as one
+delivery of a hundred thousand. Novation compresses <em>risk</em>; netting compresses <em>movement</em>. Neither
+changes what anyone owes — they change how much has to be trusted, and for how long.</figcaption>
+</figure>
+
 <p>
 Asset classes diverge sharply here. FX settles PvP through CLS with no CCP for spot; much of fixed income clears
 through FICC with repo netting; cleared OTC derivatives (LCH, CME) have no "settlement" at all in the securities
 sense — the trade lifecycle becomes a decades-long stream of variation-margin cash flows. The front-office
 lifecycle is nearly asset-class-agnostic; post-trade is anything but.
+</p>
+
+
+<h3 id="settlement">Settlement, failure, and finality</h3>
+
+<p>
+Settlement is the only event in this entire document that is irreversible. Securities move against payment at
+the depository, and once that delivery-versus-payment exchange completes it cannot be unwound by either party —
+which is precisely the property the whole apparatus exists to reach. Everything upstream is provisional:
+amendable, cancellable, correctable, bustable. Finality is where provisionality ends.
+</p>
+
+<p>
+Trades that do not settle on time <em>fail</em>, which is a technical state rather than a disaster — the seller
+could not deliver, usually because something they were owed has not arrived either. Fails are tracked, charged
+for, and eventually cured by buy-in, where the buyer goes to the market and the failing seller pays the
+difference. A chain of fails propagating through several members is the mechanism by which a settlement problem
+becomes a systemic one, and it is the reason the depository cares about the <em>sequence</em> of deliveries, not
+only their sum.
+<span class="snref"></span>
+<span class="sn">Hence CNS being <em>continuous</em>: failed positions roll forward into the next day's netting
+rather than being handled as exceptions, so a fail is absorbed by the system's normal operation instead of
+requiring intervention.</span>
+</p>
+
+<p>
+Beneath all of it runs reconciliation — books against broker, broker against custodian, custodian against
+depository — continuously and in every direction, because the entire structure rests on independent records of
+the same facts agreeing. When they disagree, someone's position is wrong, and the question is only how long it
+takes to find out.
 </p>
 
 <div class="keybox">
@@ -1929,7 +2460,7 @@ reading the same files.</span>
   <text x="10" y="370" font-size="12.5" fill="#918e86">What is <tspan fill="#c0665e">not</tspan> in this picture is the design: no broker process · no network hop on the local path · no object graph for the GC to scan ·</text>
   <text x="10" y="389" font-size="12.5" fill="#918e86">no backpressure from reader to writer · no size ceiling short of the disk.</text>
 </svg>
-<figcaption>Fig. 8 — Chronicle Queue, in full. A queue is a directory of memory-mapped files — one per roll
+<figcaption>Fig. 11 — Chronicle Queue, in full. A queue is a directory of memory-mapped files — one per roll
 cycle, conventionally a day — into which an appender writes excerpts and never rewrites them. Because the file
 is mapped rather than brokered, every reader in every process is looking at the same bytes the writer just
 produced, with no copy and no hop. Tailers are independent: one sits at the head feeding a live strategy,
@@ -2010,7 +2541,7 @@ letting the consumer read several — queues are cheap.</span>
 
   <text x="10" y="285" font-size="12" fill="#6b6963" font-style="italic">Latency budget: ~1 µs per FIX parse, sub-µs per queue hop — a full gateway-to-venue traversal in the tens of microseconds.</text>
 </svg>
-<figcaption>Fig. 9 — An order path built on Chronicle. Each blue box is a deliberately boring single-threaded
+<figcaption>Fig. 12 — An order path built on Chronicle. Each blue box is a deliberately boring single-threaded
 Java service; each amber Q is a Chronicle Queue — an append-only, memory-mapped log written once and tailed by
 anyone. The pipeline is the EMS of Figure 1 turned inside out: instead of one monolith holding state, the state
 <em>is</em> the sequence of messages on the queues, and every service is a replayable fold over them. The grey
@@ -2029,7 +2560,7 @@ needs to <em>be</em> the venue. The mapping onto this document's vocabulary is d
 <table>
 <thead><tr><th>Chronicle component</th><th>Lifecycle role</th></tr></thead>
 <tbody>
-<tr><td>Chronicle Queue</td><td>The event stream itself — every arrow in Fig. 9; IPC, persistence, replay, and audit in one</td></tr>
+<tr><td>Chronicle Queue</td><td>The event stream itself — every arrow in Fig. 12; IPC, persistence, replay, and audit in one</td></tr>
 <tr><td>Chronicle FIX</td><td>The FIX engine of §5 — session layer, µs parsing, all versions; gateways in and out</td></tr>
 <tr><td>Chronicle Services</td><td>The CEP tier — risk checks, algo containers, order-state folds as single-threaded event handlers</td></tr>
 <tr><td>Queue-Backed Map</td><td>Derived keyed state — open orders, positions, limits — replicated and rebuildable from the queue</td></tr>
@@ -2145,7 +2676,7 @@ the method names did not.</span>
   <path d="M 940 268 C 900 360 700 372 527 348" stroke="#7fb069" stroke-width="1.5" fill="none" stroke-dasharray="4 4" marker-end="url(#ar9)"/>
   <text x="740" y="392" fill="#7fb069" font-size="11.5" text-anchor="middle" class="m">sentTailer advances only once kdb+ has the batch — the commit point</text>
 </svg>
-<figcaption>Fig. 10 — The adapter, and the seam it covers. On the left the Java world writes one self-describing
+<figcaption>Fig. 13 — The adapter, and the seam it covers. On the left the Java world writes one self-describing
 message at a time into a memory-mapped file; on the right kdb+ wants columns, in bulk, through
 <code>.u.upd</code>. The adapter is the impedance match. A <em>named</em> tailer (1) reads forward and, because
 it is named, resumes at the last index it reached rather than at the start of the file. Each excerpt is
@@ -2454,6 +2985,47 @@ port_props <span class="q-s">"$CLONE_DIR/Producer/src/main/resources/application
 </details>
 
 <p>
+One gap is worth naming before leaving it. The stack you just ran carries <code>quote</code> and
+<code>trade</code> — market data — because that is what Data Intellect's Producer generates. The lifecycle this
+paper is about travels on a third stream: execution reports. In production that is a second adapter instance
+with <code>adapter.messageType=EXEC</code>, or a FIX gateway appending ExecutionReports straight onto their own
+Chronicle queue, tailed by its own adapter and published into <code>tick.q</code> alongside the market data.
+Same mechanism, same envelope, same commit offset — a different message class and a different destination
+table. That table is <code>execs</code>, and it is where the next section begins.
+<span class="snref"></span>
+<span class="sn">The symmetry is the point: once order flow and market data arrive on the same tickerplant as
+two schema'd streams, every benchmark in §4 becomes an <code>aj</code> between them. Keeping execution reports
+on a separate pipeline is the architectural decision that makes TCA hard later.</span>
+</p>
+
+<p>
+The analogy this section keeps reaching for is not decorative, and it is worth setting out plainly before
+moving on. Three systems, built decades apart by people solving unrelated problems, arrived at the same four
+decisions.
+</p>
+
+<table class="fw-table">
+<thead><tr><th></th><th>FIX</th><th>Chronicle Queue</th><th>kdb+ tick</th></tr></thead>
+<tbody>
+<tr><td>The event</td><td><code>ExecutionReport</code> — immutable, append-only on the session</td><td>An excerpt — written once into the mapped file, never rewritten</td><td>A row published to the tickerplant and appended to its log</td></tr>
+<tr><td>Derived state</td><td><code>OrdStatus(39)</code> — a fold over <code>ExecType</code> events</td><td>The service's in-memory cache — a fold over its input queues</td><td>The keyed <code>ord</code> table — a fold over <code>execs</code></td></tr>
+<tr><td>Identity</td><td><code>ExecID(17)</code>, unique per report</td><td>The queue index, monotonic per excerpt</td><td>The primary key, plus <code>execid</code> for dedupe</td></tr>
+<tr><td>Recovery</td><td>Resend request after a sequence gap</td><td>Replay the queue from the last committed index</td><td>Replay the TP log from this morning's first message</td></tr>
+<tr><td>Ordering guarantee</td><td>Per-session sequence numbers</td><td>Total order within the queue, by construction</td><td>Total order as logged by the plant</td></tr>
+<tr><td>What goes wrong</td><td>A replay applied twice, if the consumer is not idempotent</td><td>An envelope in flight at restart, if the commit offset is not tracked</td><td>A slow subscriber blocking the plant, if TCA is not behind a chain</td></tr>
+</tbody>
+</table>
+
+<p>
+The convergence is not a coincidence so much as an admission: any system that must answer <em>what happened,
+exactly, and in what order</em> after the fact is forced into the same shape. Write the events down once, in
+order, and never edit them; treat every view as a fold you can recompute; make the consumer idempotent, because
+delivery will be at-least-once whether you planned for it or not. FIX reached that conclusion in the 1990s,
+Chronicle by making the log and the transport the same bytes, kdb+ by making the log the recovery path. What
+differs is only which half each optimises — FIX the wire, Chronicle the write, kdb+ the read.
+</p>
+
+<p>
 Where does this leave kdb+? Precisely where the next section picks up. Chronicle owns the <em>in-band</em> path:
 the decision-critical microseconds between an order arriving and a child order leaving, in Java, with hard
 latency budgets. kdb+ owns the <em>out-of-band</em> plane: the joins, aggregations, time-series analytics, and
@@ -2466,6 +3038,61 @@ as the source of truth (queue file / TP log), single-writer appends, derived sta
 decoupled from the hot path. Chronicle optimises the write side in microseconds; kdb+ optimises the read side in
 queries.</span>
 </p>
+
+
+<figure class="fw" id="fig-clocks">
+<svg viewBox="0 0 1150 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The five clocks a fill passes through">
+  <line x1="60" y1="150" x2="1110" y2="150" stroke="#3a4150" stroke-width="2"/>
+  <g font-size="12">
+    <g stroke="#d4a24e" stroke-width="2"><line x1="90" y1="138" x2="90" y2="162"/></g>
+    <circle cx="90" cy="150" r="6" fill="#0e1013" stroke="#d4a24e" stroke-width="2"/>
+    <text x="90" y="118" fill="#d4a24e" text-anchor="middle" class="m">t_decision</text>
+    <text x="90" y="186" fill="#918e86" text-anchor="middle" font-size="11">PM decides</text>
+    <text x="90" y="202" fill="#6b6963" text-anchor="middle" font-size="10">arrival mid read here</text>
+
+    <circle cx="330" cy="150" r="6" fill="#0e1013" stroke="#7aa9d6" stroke-width="2"/>
+    <text x="330" y="118" fill="#7aa9d6" text-anchor="middle" class="m">t_place</text>
+    <text x="330" y="186" fill="#918e86" text-anchor="middle" font-size="11">router places child</text>
+    <text x="330" y="202" fill="#6b6963" text-anchor="middle" font-size="10">book, depth, OFI stamped</text>
+    <text x="330" y="218" fill="#6b6963" text-anchor="middle" font-size="10">in-band — unrecoverable later</text>
+
+    <circle cx="570" cy="150" r="6" fill="#0e1013" stroke="#7fb069" stroke-width="2"/>
+    <text x="570" y="118" fill="#7fb069" text-anchor="middle" class="m">TransactTime(60)</text>
+    <text x="570" y="186" fill="#918e86" text-anchor="middle" font-size="11">venue matches</text>
+    <text x="570" y="202" fill="#6b6963" text-anchor="middle" font-size="10">the only clock the market agrees on</text>
+    <text x="570" y="218" fill="#6b6963" text-anchor="middle" font-size="10">markouts measured from here</text>
+
+    <circle cx="820" cy="150" r="6" fill="#0e1013" stroke="#d4a24e" stroke-width="2"/>
+    <text x="820" y="118" fill="#d4a24e" text-anchor="middle" class="m">chrontime</text>
+    <text x="820" y="186" fill="#918e86" text-anchor="middle" font-size="11">excerpt appended</text>
+    <text x="820" y="202" fill="#6b6963" text-anchor="middle" font-size="10">Chronicle queue</text>
+
+    <circle cx="1060" cy="150" r="6" fill="#0e1013" stroke="#7aa9d6" stroke-width="2"/>
+    <text x="1060" y="118" fill="#7aa9d6" text-anchor="middle" class="m">time</text>
+    <text x="1060" y="186" fill="#918e86" text-anchor="middle" font-size="11">kdb+ insert</text>
+    <text x="1060" y="202" fill="#6b6963" text-anchor="middle" font-size="10">tickerplant stamps on receipt</text>
+  </g>
+
+  <path d="M 90 96 C 90 60 570 60 570 96" stroke="#c0665e" stroke-width="1.3" fill="none" stroke-dasharray="4 3"/>
+  <text x="330" y="52" fill="#c0665e" font-size="11.5" text-anchor="middle">implementation shortfall spans these two</text>
+
+  <path d="M 820 236 C 820 266 1060 266 1060 236" stroke="#7fb069" stroke-width="1.3" fill="none" stroke-dasharray="4 3"/>
+  <text x="940" y="282" fill="#7fb069" font-size="11.5" text-anchor="middle">time − chrontime = the pipeline's own latency, nothing to do with execution quality</text>
+
+  <text x="60" y="262" fill="#918e86" font-size="11.5">Score a fill against a quote stamped with the wrong clock and the number is silently false.</text>
+</svg>
+<figcaption>Fig. 14 — The five clocks, and which belongs to which question. A single fill carries more than one
+timestamp, and conflating them is the quietest way to produce a benchmark that is arithmetically perfect and
+practically meaningless. <code>t_decision</code> is where the arrival mid is read — the reference for
+implementation shortfall. <code>t_place</code> is where book state and order-flow imbalance must be captured,
+because the book has moved on by the time anyone asks. <code>TransactTime(60)</code> is the venue's own match
+clock and the only one all participants agree on, which is why markouts are measured forward from it rather
+than from anything in your own infrastructure. The last two — <code>chrontime</code> and <code>time</code> —
+belong to your pipeline, not to the market: their difference measures how fast your plumbing is, and tells you
+nothing whatever about whether you traded well. The companion's point-in-time discipline is exactly the rule
+that each benchmark must read a price knowable at the timestamp being measured, which in q is the difference
+between <code>aj</code> and an ordinary join, and which is silent when you get it wrong.</figcaption>
+</figure>
 
 <!-- ================================================================ -->
 <h2 id="kdb">8 · The kdb+ view: lifecycle as event stream</h2>
@@ -2555,7 +3182,7 @@ on <code>execid</code> makes both session-level resends and TP log replays safe 
   <text x="452" y="276" font-size="10.5" fill="#918e86" class="m" text-anchor="middle">subscriber</text>
   <text x="200" y="412" font-size="12" fill="#6b6963" font-style="italic">The plant has exactly one slow consumer — the chain — and the chain has no log to write, so it drains at memory speed whatever TCA does behind it.</text>
 </svg>
-<figcaption>Fig. 11 — Order flow as a first-class tickerplant feed, with TCA quarantined. Two feed handlers
+<figcaption>Fig. 15 — Order flow as a first-class tickerplant feed, with TCA quarantined. Two feed handlers
 normalise the outside world into schema'd rows: the FIX gateway parses ExecutionReports into
 <code>execs</code>, the market-data handler publishes <code>quote</code> and <code>trade</code>. The
 tickerplant does exactly two things — append every message to its log, then publish to subscribers
@@ -2599,9 +3226,16 @@ execs:([] time:`timestamp$(); sym:`$(); oid:`$(); poid:`$(); execid:`$();
 
 
 <span class="q-c">/ derived: current order state, keyed by order id — rebuilt by folding execs</span>
-order:([oid:`$()] poid:`$(); sym:`$(); side:`char$(); qty:`long$();
+ord:([oid:`$()] poid:`$(); sym:`$(); side:`char$(); qty:`long$();
   cumQty:`long$(); leaves:`long$(); avgPx:`float$();
-  status:`char$(); updTime:`timestamp$());</code></pre>
+  status:`char$(); updTime:`timestamp$());
+
+<span class="q-c">/ the four levels of Fig. 3 live in two tables, not four:</span>
+<span class="q-c">/   parent    → ord where poid = oid        (it is its own parent)</span>
+<span class="q-c">/   algoChild → ord where poid &lt;&gt; oid       (the engine's decision)</span>
+<span class="q-c">/   placement → place, keyed by coid, carrying oid of its algoChild</span>
+<span class="q-c">/   fill      → execs, carrying both coid and oid</span>
+<span class="q-c">/ Rollup at any level is then a group-by, never a join.</span></code></pre>
 
 
 <p>
@@ -2620,8 +3254,10 @@ the companion's labs, and reimplementing them alongside would only guarantee the
 <tr><td>Markouts and venue toxicity (§4, Fig. 6)</td><td><span class="labref">C1</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c1">Markouts at 1s / 10s / 60s</a></td><td>The forward-looking family; the curve, not the endpoint</td></tr>
 <tr><td>The venue scorecard; internalisation scored apart (§4)</td><td><span class="labref">C2</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c2">Spread Capture &amp; the Scorecard</a></td><td>Effective and realised spread, fill rate and markout in one row per venue</td></tr>
 <tr><td>Book state and order-flow imbalance at placement (§4)</td><td><span class="labref">C3</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-c3">Book State &amp; OFI at Placement</a></td><td>Stamps depth, spread, queue and OFI <a href="https://rohanshiloh.github.io/exec-tca-stack/#ofi">in-band</a>, where they are still recoverable</td></tr>
+<tr><td>The volume curve behind a VWAP schedule (§4, Fig. 2)</td><td><span class="labref">D1</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-d1">Volume Curve &amp; Participation</a></td><td>Builds the intraday curve the algo schedules against, and measures realised participation</td></tr>
+<tr><td>Maker-taker economics and venue comparison (§4)</td><td><span class="labref">F2</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-f2">Fee-aware, Venue-comparable</a></td><td>Puts fees and rebates into the scorecard so venues are compared net, not gross</td></tr>
 <tr><td>Opportunity cost (§4)</td><td><span class="labref">D2</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-d2">Pre-trade Cost &amp; Outliers</a></td><td>Weights the drift by the share you failed to fill</td></tr>
-<tr><td>The chained-tickerplant firewall (Fig. 9)</td><td><span class="labref">E1</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-e1">The Chained-TP Firewall</a></td><td>Demonstrates the stall, and that the chain absorbs it</td></tr>
+<tr><td>The chained-tickerplant firewall (Fig. 15)</td><td><span class="labref">E1</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-e1">The Chained-TP Firewall</a></td><td>Demonstrates the stall, and that the chain absorbs it</td></tr>
 <tr><td>Replay as the recovery path (§7, §8)</td><td><span class="labref">E2 E3</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-e2">Recover a Corrupt Log</a> · <a href="https://rohanshiloh.github.io/exec-tca-stack/#lab-e3">Replay Yesterday</a></td><td>Rescues a half-written log tail; re-runs a past day through live subscribers</td></tr>
 <tr><td>Scorecard feeding the routing table (§4)</td><td><span class="labref">AW</span><a href="https://rohanshiloh.github.io/exec-tca-stack/#wheel">From Scorecard to Controller</a></td><td>Closes the loop: measurement becomes venue and algo selection</td></tr>
 </tbody>
@@ -2638,9 +3274,24 @@ curves not averages. If you take nothing else across from the companion, take th
 </div>
 
 <p>
-Two design points carry the whole architecture. First, <em>events are the source of truth</em>: the
-<code>order</code> table can be rebuilt at any time by replaying <code>execs</code> from the TP log, so a crashed
-CEP recovers with zero data loss and no reconciliation against the OMS. Second, <em>parent and child are the same
+Three design points carry the whole architecture. First, <em>the four levels of Figure 3 do not need four
+tables</em>. A parent is simply a row of <code>ord</code> whose <code>poid</code> equals its own
+<code>oid</code>; an algoChild is a row whose <code>poid</code> points elsewhere; a placement lives in
+<code>place</code> carrying the <code>oid</code> of the algoChild that spawned it; and a fill in
+<code>execs</code> carries both. One self-referencing table plus two event streams expresses the whole
+hierarchy, and — the point of the exercise — lets you measure parent-to-algoChild slippage and
+algoChild-to-placement slippage as two different group-bys over the same rows.
+<span class="snref"></span>
+<span class="sn">If your platform tags algo decisions explicitly, an <code>algoId</code> or <code>sliceId</code>
+column on both <code>ord</code> and <code>execs</code> is the less clever and more legible alternative. Either
+works; what does not work is flattening to parent-and-fill, because then the question "algo or router?" has no
+column to answer it.</span>
+</p>
+
+<p>
+Second, <em>events are the source of truth</em>: the
+<code>ord</code> table can be rebuilt at any time by replaying <code>execs</code> from the TP log, so a crashed
+CEP recovers with zero data loss and no reconciliation against the OMS. Third, <em>parent and child are the same
 schema</em>: <code>poid</code> makes rollup a group-by rather than a join, and the invariant checks —
 <code>qty=cumQty+leaves</code> per order, parent <code>cumQty</code> equal to the sum over children — become
 one-line queries that run continuously as alerts.
@@ -2677,9 +3328,13 @@ seam, and post-trade converts promises into finality through netting and DvP. Un
 being rediscovered: an append-only event stream as the source of truth with derived, replayable state — enforced
 by FIX's ExecType discipline on the wire, by Chronicle's memory-mapped queues on the in-band path, and by the
 tickerplant log in kdb+ on the analytical plane. Systems built this way survive their own crashes; systems that
-aren't get reconciled by hand at midnight. For the measurement half of the story — every benchmark here built,
-run and argued over on a live stack — see the companion volume,
-<a href="https://rohanshiloh.github.io/exec-tca-stack/"><em>Anatomy of a Fill</em></a>.
+aren't get reconciled by hand at midnight.
+</p>
+
+<p style="color:var(--ink-dim); font-size:.85rem; font-style:italic;">
+That is the map. <a href="https://rohanshiloh.github.io/exec-tca-stack/"><em>Anatomy of a Fill</em></a> walks
+the territory — every benchmark named here, built and argued over on a live stack. <em>Sharded Ticks</em>
+takes the machine to scale. Read in any order; they were written to be read in this one.
 </p>
 
 <!-- ================================================================ -->
@@ -2725,12 +3380,12 @@ Crash cascade in Section 4.</span></p>
 documentation, <a href="https://chronicle.software/products/chronicle-queue">chronicle.software/products/chronicle-queue</a>;
 open-source core at <a href="https://github.com/OpenHFT/Chronicle-Queue">github.com/OpenHFT/Chronicle-Queue</a>.
 <span class="ref-note">Memory-mapped append-only queues, the single-writer principle, roll cycles, Async Mode,
-TCP replication and the cross-language binary format — the architecture of Fig. 8 and the latency figures
+TCP replication and the cross-language binary format — the architecture of Fig. 11 and the latency figures
 quoted through §7.</span></p>
 
 <p><span class="au">Data Intellect</span> (formerly AquaQ Analytics), <em>Chronicle Queue to kdb+ Adapter</em>,
 <a href="https://github.com/DataIntellectTech/kdb-chronicle-queue">github.com/DataIntellectTech/kdb-chronicle-queue</a>.
-<span class="ref-note">The open-source adapter anatomised in Fig. 10: named tailers, MapStruct mapping, the
+<span class="ref-note">The open-source adapter anatomised in Fig. 13: named tailers, MapStruct mapping, the
 kdb+ envelope, the <code>sentTailer</code> commit offset, and the <code>dummytp.q</code> schema. Everything
 in that subsection is drawn from this source rather than from the announcement.</span></p>
 
