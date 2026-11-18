@@ -8,7 +8,7 @@
 |---|---|---|
 | **Part One** | **The Order & Trade Lifecycle** — the map | *what the machine is* |
 | Part Two | [Anatomy of a Fill](https://rohanshiloh.github.io/exec-tca-stack/) — the territory | *how we measure it* |
-| Part Three | Sharded Ticks — the machine | *building it to scale* |
+| Part Three | [Sharded Ticks](https://rohanshiloh.github.io/tickerplant.ai/) — the machine | *building it to scale* |
 
 How an intention becomes a settled trade: through the OMS, the EMS, and the FIX wire to clearing and
 finality — then rebuilt as software, on Chronicle's microsecond queues and a real-time q/kdb+ tickerplant.
@@ -60,7 +60,8 @@ paper explains *what* the lifecycle is and *why* it has that shape, Part Two bui
 q/kdb+ that measures it — a tickerplant, a chained TP isolating the CEP, and every benchmark derived from raw
 events by one `aj` or one `select … by`.
 
-**Part Three — Sharded Ticks** is the machine: taking that stack to scale.
+**[Part Three — Sharded Ticks](https://rohanshiloh.github.io/tickerplant.ai/)** is the machine: taking that
+stack to scale.
 
 Start there with [Ten Ways to Get This Wrong](https://rohanshiloh.github.io/exec-tca-stack/#mistakes) and
 [Five Rules](https://rohanshiloh.github.io/exec-tca-stack/#rules).
