@@ -54,11 +54,6 @@
     border-top: 1px solid var(--rule);
     display: inline-block;
   }
-  .byline .role {
-    font-variant: small-caps; font-style: normal;
-    letter-spacing: .1em; font-size: .78rem;
-    color: var(--accent); margin-right: .45rem;
-  }
   .byline a { font-style: normal; font-family: var(--mono); font-size: .78rem; }
   .byline .dom { color: var(--ink-faint); }
   h2 {
@@ -200,6 +195,130 @@
   }
   hr { border: none; border-top: 1px solid var(--rule); margin: 3rem 0; width: 30%; margin-left: 0; }
 
+
+  /* ================= THEME ================= */
+  /* JS resolves auto -> light|dark and sets data-theme on <html>;
+     data-pref holds the user's actual choice for the button state. */
+  [data-theme="light"] {
+    --bg: #faf9f6;
+    --bg2: #f1efe9;
+    --bg3: #e9e6dd;
+    --ink: #1f1d1a;
+    --ink-dim: #55524c;
+    --ink-faint: #7e7a72;
+    --accent: #8f6210;
+    --blue: #245a8a;
+    --green: #386627;
+    --red: #9c362c;
+    --rule: #d7d3c9;
+    color-scheme: light;
+  }
+  [data-theme="light"] tr:hover td { background: #f3f1eb; }
+  [data-theme="light"] code { background: #efece4; color: #1c4a72; }
+  [data-theme="light"] pre { background: #f6f4ef; }
+  [data-theme="light"] pre code { color: #2a2824; }
+  [data-theme="light"] td { border-bottom: 1px solid #e7e3da; }
+  [data-theme="light"] .companion { background: #eef3f8; }
+  [data-theme="light"] .labref { border-color: #bcd0e0; }
+  [data-theme="light"] .step .num { border-color: #d9c79e; }
+  [data-theme="light"] details.fold { background: #f6f4ef; }
+  [data-theme="light"] :target { animation: flashL 1.6s ease-out; }
+  @keyframes flashL { from { background: rgba(143,98,16,.13); } to { background: transparent; } }
+
+  [data-theme="light"] svg [fill="#0e1013"] { fill: #faf9f6; }
+  [data-theme="light"] svg [stroke="#0e1013"] { stroke: #faf9f6; }
+  [data-theme="light"] svg [fill="#14171c"] { fill: #f1efe9; }
+  [data-theme="light"] svg [stroke="#14171c"] { stroke: #f1efe9; }
+  [data-theme="light"] svg [fill="#1a1e26"] { fill: #ffffff; }
+  [data-theme="light"] svg [stroke="#1a1e26"] { stroke: #ffffff; }
+  [data-theme="light"] svg [fill="#161a21"] { fill: #f4f2ec; }
+  [data-theme="light"] svg [stroke="#161a21"] { stroke: #f4f2ec; }
+  [data-theme="light"] svg [fill="#171b22"] { fill: #f0eee7; }
+  [data-theme="light"] svg [stroke="#171b22"] { stroke: #f0eee7; }
+  [data-theme="light"] svg [fill="#191d25"] { fill: #f4f2ec; }
+  [data-theme="light"] svg [stroke="#191d25"] { stroke: #f4f2ec; }
+  [data-theme="light"] svg [fill="#1f2731"] { fill: #e9e6dd; }
+  [data-theme="light"] svg [stroke="#1f2731"] { stroke: #e9e6dd; }
+  [data-theme="light"] svg [fill="#12151a"] { fill: #f0eee7; }
+  [data-theme="light"] svg [stroke="#12151a"] { stroke: #f0eee7; }
+  [data-theme="light"] svg [fill="#12161c"] { fill: #f6f4ef; }
+  [data-theme="light"] svg [stroke="#12161c"] { stroke: #f6f4ef; }
+  [data-theme="light"] svg [fill="#171c22"] { fill: #f4f2ec; }
+  [data-theme="light"] svg [stroke="#171c22"] { stroke: #f4f2ec; }
+  [data-theme="light"] svg [fill="#12211a"] { fill: #e6f1e2; }
+  [data-theme="light"] svg [stroke="#12211a"] { stroke: #e6f1e2; }
+  [data-theme="light"] svg [fill="#17241b"] { fill: #e6f1e2; }
+  [data-theme="light"] svg [stroke="#17241b"] { stroke: #e6f1e2; }
+  [data-theme="light"] svg [fill="#141a16"] { fill: #edf4e9; }
+  [data-theme="light"] svg [stroke="#141a16"] { stroke: #edf4e9; }
+  [data-theme="light"] svg [fill="#152018"] { fill: #e6f1e2; }
+  [data-theme="light"] svg [stroke="#152018"] { stroke: #e6f1e2; }
+  [data-theme="light"] svg [fill="#2a1f22"] { fill: #fbe9e7; }
+  [data-theme="light"] svg [stroke="#2a1f22"] { stroke: #fbe9e7; }
+  [data-theme="light"] svg [fill="#211517"] { fill: #fbe9e7; }
+  [data-theme="light"] svg [stroke="#211517"] { stroke: #fbe9e7; }
+  [data-theme="light"] svg [fill="#1a1215"] { fill: #fdf0ee; }
+  [data-theme="light"] svg [stroke="#1a1215"] { stroke: #fdf0ee; }
+  [data-theme="light"] svg [fill="#241c10"] { fill: #fbf0da; }
+  [data-theme="light"] svg [stroke="#241c10"] { stroke: #fbf0da; }
+  [data-theme="light"] svg [fill="#161d26"] { fill: #e8eff7; }
+  [data-theme="light"] svg [stroke="#161d26"] { stroke: #e8eff7; }
+  [data-theme="light"] svg [fill="#3a4150"] { fill: #c6c1b7; }
+  [data-theme="light"] svg [stroke="#3a4150"] { stroke: #c6c1b7; }
+  [data-theme="light"] svg [fill="#2a2e36"] { fill: #d7d3c9; }
+  [data-theme="light"] svg [stroke="#2a2e36"] { stroke: #d7d3c9; }
+  [data-theme="light"] svg [fill="#2f3642"] { fill: #ccc7bd; }
+  [data-theme="light"] svg [stroke="#2f3642"] { stroke: #ccc7bd; }
+  [data-theme="light"] svg [fill="#333b48"] { fill: #c6c1b7; }
+  [data-theme="light"] svg [stroke="#333b48"] { stroke: #c6c1b7; }
+  [data-theme="light"] svg [fill="#2f4235"] { fill: #a2c09a; }
+  [data-theme="light"] svg [stroke="#2f4235"] { stroke: #a2c09a; }
+  [data-theme="light"] svg [fill="#375040"] { fill: #a2c09a; }
+  [data-theme="light"] svg [stroke="#375040"] { stroke: #a2c09a; }
+  [data-theme="light"] svg [fill="#5a3a38"] { fill: #d8a69f; }
+  [data-theme="light"] svg [stroke="#5a3a38"] { stroke: #d8a69f; }
+  [data-theme="light"] svg [fill="#d3d0c8"] { fill: #1f1d1a; }
+  [data-theme="light"] svg [stroke="#d3d0c8"] { stroke: #1f1d1a; }
+  [data-theme="light"] svg [fill="#918e86"] { fill: #55524c; }
+  [data-theme="light"] svg [stroke="#918e86"] { stroke: #55524c; }
+  [data-theme="light"] svg [fill="#6b6963"] { fill: #7e7a72; }
+  [data-theme="light"] svg [stroke="#6b6963"] { stroke: #7e7a72; }
+  [data-theme="light"] svg [fill="#4a4844"] { fill: #98948c; }
+  [data-theme="light"] svg [stroke="#4a4844"] { stroke: #98948c; }
+  [data-theme="light"] svg [fill="#d4a24e"] { fill: #8f6210; }
+  [data-theme="light"] svg [stroke="#d4a24e"] { stroke: #8f6210; }
+  [data-theme="light"] svg [fill="#7aa9d6"] { fill: #245a8a; }
+  [data-theme="light"] svg [stroke="#7aa9d6"] { stroke: #245a8a; }
+  [data-theme="light"] svg [fill="#7fb069"] { fill: #386627; }
+  [data-theme="light"] svg [stroke="#7fb069"] { stroke: #386627; }
+  [data-theme="light"] svg [fill="#c0665e"] { fill: #9c362c; }
+  [data-theme="light"] svg [stroke="#c0665e"] { stroke: #9c362c; }
+
+  /* ---- theme switch ---- */
+  .themebar {
+    display: flex; justify-content: flex-end; align-items: center;
+    gap: .4rem; margin: 0 0 1.6rem;
+    font-size: .7rem;
+  }
+  .themebar .lbl {
+    font-variant: small-caps; letter-spacing: .14em;
+    color: var(--ink-faint); margin-right: .2rem;
+  }
+  .themebar button {
+    font-family: var(--serif); font-size: .72rem;
+    font-variant: small-caps; letter-spacing: .1em;
+    color: var(--ink-faint); background: transparent;
+    border: 1px solid var(--rule); border-radius: 3px;
+    padding: .16em .55em; cursor: pointer;
+    transition: color .15s, border-color .15s;
+  }
+  .themebar button:hover { color: var(--ink); border-color: var(--ink-faint); }
+  [data-pref="light"] .themebar button[data-set="light"],
+  [data-pref="dark"]  .themebar button[data-set="dark"],
+  [data-pref="auto"]  .themebar button[data-set="auto"] {
+    color: var(--accent); border-color: var(--accent);
+  }
+
   /* ---- trilogy masthead ---- */
   .kicker {
     font-family: var(--serif); font-variant: small-caps;
@@ -282,10 +401,29 @@
     figure.fw, .fw-table { width: 100%; }
   }
 </style>
+<script>
+(function () {
+  var pref = null;
+  try { pref = localStorage.getItem('otl-theme'); } catch (e) {}
+  if (pref !== 'light' && pref !== 'dark') pref = 'auto';
+  var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var resolved = pref === 'auto' ? (dark ? 'dark' : 'light') : pref;
+  var r = document.documentElement;
+  r.setAttribute('data-pref', pref);
+  r.setAttribute('data-theme', resolved);
+})();
+</script>
 </head>
 <body>
 <div class="page">
 <main>
+
+<div class="themebar" role="group" aria-label="Colour theme">
+  <span class="lbl">theme</span>
+  <button type="button" data-set="light" aria-label="Light theme">light</button>
+  <button type="button" data-set="dark" aria-label="Dark theme">dark</button>
+  <button type="button" data-set="auto" aria-label="Match system theme">auto</button>
+</div>
 
 <p class="kicker">The Execution Trilogy · <span class="part">Part One</span></p>
 <h1>The Order &amp; Trade Lifecycle<span class="tag">The Map</span></h1>
@@ -343,7 +481,10 @@ reconciliation of parent against child — fails all at once.</span>
 </p>
 
 <p>
-Nobody at Knight had fat-fingered a ticket. Every individual message was well-formed. What failed was the
+Nobody at Knight had fat-fingered a ticket. Every individual message was well-formed, and the router routed
+exactly as instructed. What failed was not routing but <em>state</em>: eight servers no longer agreed on which
+code was live, and no system in the chain could answer the only question that mattered — which orders should
+exist right now, and on whose authority. What failed, in other words, was the
 <em>lifecycle</em>: the chain of custody that is supposed to bind every order a machine sends to an intention a
 human actually had. Understanding that chain — what the systems are, who owns which state, and what travels on
 the wire between them — is the subject of what follows.
@@ -358,9 +499,22 @@ confirmation, clearing, and settlement, until cash and securities actually move.
 <span class="snref"></span>
 <span class="sn">A useful mental test: the boundary is economic exposure. Up to the moment an execution creates
 it, changes are order-state transitions — amend, cancel, expire. Once it exists, changes are handled instead as
-trade corrections, cancels or busts, which is a different mechanism with different participants. FIX encodes this exact boundary in <code>ExecType(150)</code>: values <code>F/G/H</code> are trade
-events, everything else is order-state.</span>
+trade corrections, cancels or busts, which is a different mechanism with different participants. FIX reflects the boundary through the execution-report workflow rather than stating it
+outright: trade and trade-correction events — <code>F</code>, <code>G</code> and <code>H</code> in most equity
+workflows — belong to the trade side, while most other <code>ExecType(150)</code> values describe order state.
+Brokers extend the vocabulary, so read the counterparty's rules of engagement rather than the base spec.</span>
 </p>
+
+<div class="keybox">
+<span class="kb-title">Key concept — the boundary is economic exposure</span>
+<p>The usual shorthand is that the order lifecycle covers anything still cancellable. Useful intuition, not
+quite true — venues bust and correct trades after the fact. The exact line is <em>economic exposure</em>. Up to
+the moment an execution creates it, changes are order-state transitions: amend, cancel, expire, all of them
+routine and all of them reversing an intention that had not yet cost anything. Once exposure exists, the
+instrument of change is different — a trade correction, cancel or bust, involving the venue and sometimes the
+clearing house, and leaving a record that something was undone rather than never done. Everything in this paper
+sits on one side of that line or the other.</p>
+</div>
 
 <p>
 The two lifecycles run at radically different speeds. The order lifecycle plays out in microseconds to minutes
@@ -492,7 +646,7 @@ to a full day — and reconciliation runs continuously beneath both.</figcaption
 <p>
 On the evening of Friday, 24 October 1986, the London Stock Exchange still worked much as it had for two
 centuries: brokers carried client orders to jobbers who made prices face to face, commissions were fixed by
-agreement, and the two roles were kept rigidly apart. By the following Tuesday all three arrangements were
+agreement, and the two roles were kept rigidly apart. By Monday morning all three arrangements were
 gone. Fixed commissions were abolished, single capacity ended, and prices moved onto screens — the SEAQ
 system — where they could be seen without standing on the floor. Within weeks that floor was effectively
 deserted, its traders relocated to desks; within a few years most of the venerable British broking houses had
@@ -630,23 +784,15 @@ orders in place of fund orders.</span>
 </p>
 
 <div class="keybox">
-<span class="kb-title">Key concept — parent order as the unit of intent</span>
-<p>The parent order is an <em>intention</em>, not a market artefact. Venues never see it. It exists so that
-compliance, allocation, and performance attribution have a stable anchor while the EMS shreds the intention into
-dozens or thousands of short-lived child orders. Every child carries lineage back to its parent
-(<code>ClOrdID</code> chains in FIX), and every fill must roll up without loss — the invariant
-<code>parent.cum = Σ child.cum</code> is the single most important reconciliation in the front office.</p>
-</div>
-
-<div class="keybox">
-<span class="kb-title">Key concept — parent and child orders</span>
-<p>The <em>parent</em> is the firm's full intention (buy 500k); a <em>child</em> is any order a venue actually
-sees (buy 2k limit at the bid, IOC). The cardinality is brutal: one parent routinely spawns hundreds to
-thousands of children, each with its own <code>ClOrdID</code>, its own state machine, and a lifetime measured in
-milliseconds to minutes. Children are disposable — cancelled and re-placed constantly as the algo chases the
-market — but the parent's <code>cumQty</code> and <code>avgPx</code> only ever move forward, fill by fill.
-Lineage (child → parent via <code>OrigClOrdID</code>/parent-id tags) is what lets the blotter, TCA, and
-compliance see one intention rather than a blizzard of placements.</p>
+<span class="kb-title">Key concept — the parent as unit of intent</span>
+<p>The parent is an <em>intention</em> — buy 500k — not a market artefact; venues never see it. It exists so
+that compliance, allocation and attribution have a stable anchor while the EMS shreds that intention into
+hundreds or thousands of short-lived orders, each with its own identifier, its own state machine and a lifetime
+measured in milliseconds. Those are disposable, cancelled and re-placed constantly as the algo chases the
+market. The parent is not: its <code>cumQty</code> and <code>avgPx</code> only ever move forward, fill by fill.
+Lineage is what holds the two together, and the invariant
+<code>parent.cum = Σ child.cum</code> is the single most important reconciliation in the front office — it is
+what lets a blotter show one intention rather than a blizzard of placements.</p>
 </div>
 
 <p>
@@ -876,6 +1022,46 @@ often within milliseconds. The dashed blue return path is the accounting that ho
 child's execution reports climb back up the <code>ClOrdID</code> lineage, and the parent's
 <code>cumQty</code>/<code>avgPx</code> advance fill by fill until the intention is done.</figcaption>
 </figure>
+
+<h3 id="hierarchy">The execution hierarchy, named once</h3>
+
+<p>
+Before going further it is worth fixing the vocabulary, because the rest of this paper and both of its
+companions depend on these five words meaning exactly one thing each. They are not interchangeable, and most
+confusion about execution quality is really confusion about which of them somebody is talking about.
+</p>
+
+<table class="fw-table">
+<thead><tr><th>Level</th><th>What it is</th><th>Created by</th><th>Seen by the market?</th></tr></thead>
+<tbody>
+<tr><td><strong>Parent order</strong></td><td>The investment instruction in full — buy 500,000, by the close, against VWAP</td><td>Portfolio manager, via the OMS</td><td>Never</td></tr>
+<tr><td><strong>Algo order</strong><br><span style="color:var(--ink-faint);font-size:.95em">also: algoChild, slice, child order</span></td><td>A strategy's decision about what portion to work, and when — a quantity and an urgency, not yet a destination</td><td>The trading engine, inside the EMS or at the broker</td><td>Never</td></tr>
+<tr><td><strong>Placement</strong></td><td>One instruction to one venue: rest 500 at the bid on Arca, sweep 300 IOC on EDGX</td><td>The smart order router</td><td>Yes — this is the only object a venue ever receives</td></tr>
+<tr><td><strong>Fill</strong></td><td>An executed fragment: quantity, price, venue, liquidity flag. Immutable</td><td>The venue's matching engine</td><td>Printed to the tape</td></tr>
+<tr><td><strong>Trade</strong></td><td>The economic obligation created by one or more fills, once allocated to an account</td><td>The middle office, at allocation</td><td>Reported; then cleared and settled</td></tr>
+</tbody>
+</table>
+
+<div class="keybox">
+<span class="kb-title">Key concept — one word, three vocabularies</span>
+<p>The same object travels under different names depending on who is speaking. A buy-side EMS calls it a
+<em>child order</em>; a broker's algo container calls it an <em>algo order</em>; a kdb+ schema calls it an
+<code>algoChild</code> row whose <code>poid</code> points at the parent. They are the same thing — the
+strategy's unit of decision, sitting between the intention and the placement. This paper uses
+<em>algo order</em> in prose and <code>algoChild</code> in code, and
+<a href="https://rohanshiloh.github.io/exec-tca-stack/#parent-state">Part Two</a> uses the same split. What
+matters is not the label but that the level exists at all: collapse it into "child order" and you lose the only
+boundary at which algorithm and router can be told apart.</p>
+</div>
+
+<p>
+Two of these deserve emphasis because they are routinely merged. The <em>algo order</em> and the
+<em>placement</em> look alike — both are smaller than the parent, both are short-lived — but they answer
+different questions and belong to different systems. The algo order says <em>work two thousand shares over the
+next thirty seconds</em>. The placement says <em>and do it by resting five hundred on Arca</em>. One algo order
+typically produces several placements as the router posts, cancels and re-posts; measuring across that boundary
+is how you find out whether a bad execution was a scheduling decision or a routing one.
+</p>
 
 <h3 id="execution-stack">The execution stack, and what an order really becomes</h3>
 
@@ -1797,7 +1983,7 @@ the driver's tables need append-only speed. One schema serving both masters serv
 </p>
 
 <table>
-<thead><tr><th></th><th>OMS</th><th>EMS</th></tr></thead>
+<thead><tr><th scope="col">Dimension</th><th scope="col">OMS</th><th scope="col">EMS</th></tr></thead>
 <tbody>
 <tr><td>Unit of work</td><td>Parent order (intent)</td><td>Child order (market artefact)</td></tr>
 <tr><td>Optimises for</td><td>Correctness: compliance, allocation, auditability</td><td>Execution quality: impact, slippage, speed</td></tr>
@@ -1860,7 +2046,7 @@ One message type — <code>ExecutionReport (35=8)</code> — spans both lifecycl
 <tbody>
 <tr><td rowspan="5">Order</td><td>NewOrderSingle</td><td><code>D</code></td><td>client → broker/venue</td><td>Create an order; carries <code>ClOrdID(11)</code>, side, qty, type, TIF, algo params (<code>847</code>, custom tags)</td></tr>
 <tr><td>OrderCancelRequest</td><td><code>F</code></td><td>client → broker/venue</td><td>Cancel working order; new <code>ClOrdID</code>, chains via <code>OrigClOrdID(41)</code></td></tr>
-<tr><td>OrderCancelReplaceRequest</td><td><code>G</code></td><td>client → broker/venue</td><td>Amend price/qty; may lose queue priority</td></tr>
+<tr><td>OrderCancelReplaceRequest</td><td><code>G</code></td><td>client → broker/venue</td><td>Amend price/qty; new <code>ClOrdID(11)</code>, chains via <code>OrigClOrdID(41)</code>; may lose queue priority</td></tr>
 <tr><td>ExecutionReport (ack path)</td><td><code>8</code></td><td>broker/venue → client</td><td><code>ExecType</code> 0/4/5/8/A/C/E/6 — New, Canceled, Replaced, Rejected, PendingNew, Expired, PendingReplace, PendingCancel</td></tr>
 <tr><td>OrderStatusRequest</td><td><code>H</code></td><td>client → broker</td><td>Solicit a status snapshot (<code>ExecType=I</code>); used in recovery/reconciliation</td></tr>
 <tr><td rowspan="4">Trade</td><td>ExecutionReport (fill path)</td><td><code>8</code></td><td>venue → client</td><td><code>ExecType=F</code> (Trade), <code>G/H</code> (TradeCorrect / TradeCancel); carries <code>LastQty(32) LastPx(31) LastMkt(30) ExecID(17)</code></td></tr>
@@ -1965,7 +2151,7 @@ for the order's whole life: your own <code>oid</code>, or the venue's <code>Orde
     <text x="168" y="92" fill="#c0665e">150=8 reject</text>
     <text x="404" y="252">150=4</text>
     <text x="596" y="238">150=4</text>
-    <text x="640" y="270">150=C (TIF)</text>
+    <text x="618" y="286">150=C (TIF)</text>
   </g>
 </svg>
 <figcaption>Fig. 8 — The canonical FIX order state machine, as maintained independently — and, one hopes,
@@ -1978,7 +2164,9 @@ events (<code>ExecType=F</code>): a partial fill loops <em>PartiallyFilled</em> 
 accumulate, until the final fill lands the order in <em>Filled</em>. Every green arrow simultaneously creates an
 entry in the trade lifecycle of Section 6. The dashed side-box is the cancel-replace cycle: an amend passes
 through <em>PendingReplace</em> and returns an <code>ExecType=5</code>, critically <em>preserving cumulative
-quantities across the ClOrdID chain</em> — the replaced order keeps its fills. The terminal states
+quantities across the ClOrdID chain</em> — the replaced order keeps its fills. (<code>ExecType=E</code> is
+PendingReplace, the venue acknowledging it has the amend but has not yet applied it; <code>150=5</code> is
+Replaced, when it has.) The terminal states
 (<em>Filled</em>, <em>Canceled</em>, <em>Expired</em>, <em>Rejected</em>) are absorbing: nothing leaves them
 except a trade correction or bust, which belongs to the other lifecycle entirely.</figcaption>
 </figure>
@@ -2009,13 +2197,13 @@ except a trade correction or bust, which belongs to the other lifecycle entirely
     <text x="316" y="177" fill="#6b6963">cum 300 · leaves 700</text>
 
     <rect x="590" y="100" width="250" height="86" rx="6" fill="#1a1e26" stroke="#d4a24e"/>
-    <text x="606" y="122" fill="#d4a24e" font-size="12">35=G  amend to 800</text>
+    <text x="606" y="122" fill="#d4a24e" font-size="12">35=G amend → 150=5</text>
     <text x="606" y="142" fill="#d3d0c8">ClOrdID = C2</text>
     <text x="606" y="160" fill="#7aa9d6">OrigClOrdID = C1</text>
     <text x="606" y="177" fill="#6b6963">cum 300 · leaves 500</text>
 
     <rect x="880" y="100" width="260" height="86" rx="6" fill="#1a1e26" stroke="#3a4150"/>
-    <text x="896" y="122" fill="#d3d0c8" font-size="12">35=F  cancel the rest</text>
+    <text x="896" y="122" fill="#d3d0c8" font-size="12">35=F cancel → 150=4</text>
     <text x="896" y="142" fill="#d3d0c8">ClOrdID = C3</text>
     <text x="896" y="160" fill="#7aa9d6">OrigClOrdID = C2</text>
     <text x="896" y="177" fill="#6b6963">cum 300 · leaves 0</text>
@@ -2038,7 +2226,10 @@ except a trade correction or bust, which belongs to the other lifecycle entirely
 </svg>
 <figcaption>Fig. 9 — One order, three ClOrdIDs. Each cancel or amend mints a new <code>ClOrdID(11)</code> and
 points <code>OrigClOrdID(41)</code> back at the one it supersedes, so the chain is lineage rather than
-identity: the order itself never changed, only the messages about it. Notice what survives the amend — the
+identity: the order itself never changed, only the messages about it. The quantities shown are the
+<em>confirmed</em> ones — an outbound <code>35=G</code> or <code>35=F</code> is a request, and
+<code>cum</code> and <code>leaves</code> only move when the venue answers with <code>150=5</code> or
+<code>150=4</code>. Notice what survives the amend — the
 quantity is reduced from 1000 to 800, but the 300 shares already executed stay executed, and
 <code>LeavesQty</code> absorbs the difference. That is the whole reason the invariant is worth asserting
 continuously: it is the cheapest possible detector for the single most common state-machine bug, which is a
@@ -2121,6 +2312,63 @@ allocation process that was a next-morning task for decades is now an evening on
 central matching exists at all.
 </p>
 
+
+<figure class="fw" id="fig-t1">
+<svg viewBox="0 0 1150 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The T+1 clock from execution to settlement">
+  <defs>
+    <marker id="art" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#918e86"/>
+    </marker>
+  </defs>
+
+  <rect x="60" y="92" width="640" height="26" rx="3" fill="#241c10"/>
+  <rect x="700" y="92" width="150" height="26" rx="3" fill="#2a1f22"/>
+  <rect x="850" y="92" width="260" height="26" rx="3" fill="#12211a"/>
+  <line x1="60" y1="105" x2="1110" y2="105" stroke="#3a4150" stroke-width="1"/>
+
+  <g font-size="11.5" fill="#918e86" text-anchor="middle">
+    <line x1="120" y1="86" x2="120" y2="124" stroke="#d4a24e" stroke-width="2"/>
+    <text x="120" y="76" fill="#d4a24e" class="m">16:00</text>
+    <text x="120" y="146">close</text>
+    <text x="120" y="162" font-size="10" fill="#6b6963">execution done</text>
+
+    <line x1="420" y1="86" x2="420" y2="124" stroke="#918e86" stroke-width="1.5"/>
+    <text x="420" y="76" class="m">evening</text>
+    <text x="420" y="146">allocate</text>
+    <text x="420" y="162" font-size="10" fill="#6b6963">block → accounts</text>
+
+    <line x1="700" y1="80" x2="700" y2="130" stroke="#c0665e" stroke-width="2.5"/>
+    <text x="700" y="70" fill="#c0665e" class="m">21:00 ET</text>
+    <text x="700" y="146" fill="#c0665e">affirmation cutoff</text>
+    <text x="700" y="162" font-size="10" fill="#6b6963">miss it and you settle by exception</text>
+
+    <line x1="850" y1="86" x2="850" y2="124" stroke="#918e86" stroke-width="1.5"/>
+    <text x="850" y="76" class="m">overnight</text>
+    <text x="850" y="146">night cycle</text>
+    <text x="850" y="162" font-size="10" fill="#6b6963">novation · netting</text>
+
+    <line x1="1070" y1="86" x2="1070" y2="124" stroke="#7fb069" stroke-width="2"/>
+    <text x="1070" y="76" fill="#7fb069" class="m">T+1</text>
+    <text x="1070" y="146" fill="#7fb069">settlement</text>
+    <text x="1070" y="162" font-size="10" fill="#6b6963">DvP · final</text>
+  </g>
+
+  <text x="380" y="46" fill="#6b6963" font-size="11" text-anchor="middle" letter-spacing="1">TRADE DATE — FIVE HOURS OF MIDDLE OFFICE</text>
+  <text x="980" y="46" fill="#6b6963" font-size="11" text-anchor="middle" letter-spacing="1">CLEARING AND SETTLEMENT</text>
+
+  <line x1="60" y1="200" x2="1110" y2="200" stroke="#2a2e36"/>
+  <text x="60" y="224" fill="#918e86" font-size="12">Under T+2 this whole band was a next-morning task. T+1 moved it into the evening of trade date and left the</text>
+  <text x="60" y="242" fill="#918e86" font-size="12">cutoff where it was — which is why affirmation stopped being a courtesy and became an operational constraint,</text>
+  <text x="60" y="260" fill="#918e86" font-size="12">and why anything that delays allocation now has a cost measured in fails rather than in inconvenience.</text>
+</svg>
+<figcaption>Fig. 10 — The clock that makes post-trade hard. Execution ends at the close; settlement happens on
+T+1; everything between is compressed into a few hours of trade-date evening, ending at a hard 9:00pm ET
+affirmation cutoff. Trades affirmed before it flow into the depository's overnight cycle, where novation and
+netting happen while nobody is watching, and settle the next day. Trades that miss it settle by exception, at
+cost. Note what shortening the cycle actually did: it did not speed anything up, it removed a day of slack —
+the same work, with the morning taken away.</figcaption>
+</figure>
+
 <h3 id="affirmation">Confirmation, affirmation, and what "locked in" means</h3>
 
 <p>
@@ -2142,6 +2390,25 @@ it is an obligation the clearing system has taken responsibility for sequencing.
 boundary of the middle office.
 </p>
 
+<div class="keybox">
+<span class="kb-title">Key concept — why post-trade is underestimated</span>
+<p>Front-office failure is loud: a bad fill shows up in a number someone is already watching. Post-trade
+failure is quiet and accrues. An allocation sent late costs nothing visible on the day; a fail costs a small
+financing charge; a reconciliation break sits in a queue. None of it reaches a P&amp;L line with a name on it,
+which is exactly why the discipline erodes until something forces attention — a buy-in, a regulatory finding,
+or a cycle compression like T+1 that removes the slack the sloppiness was living in.</p>
+</div>
+
+<div class="keybox">
+<span class="kb-title">Key concept — three records of the same trade</span>
+<p>Post-trade runs on the assumption that independently maintained records agree. Your books say one thing,
+the broker's confirm says another, the custodian's statement a third, and the depository holds the only version
+that is legally dispositive. Reconciliation is the continuous proof that all four describe the same world. The
+interesting failures are not the ones where a number is wrong but where two records are each internally
+consistent and mutually incompatible — which is why the timestamp and the identifier matter as much as the
+quantity.</p>
+</div>
+
 <h3 id="clearing">Clearing: novation, netting, and margin</h3>
 
 <p>
@@ -2157,30 +2424,25 @@ offset, and only the residual is delivered. The first compresses risk, the secon
 Margin is what makes novation survivable. Having made itself the counterparty to everyone, the CCP must be able
 to absorb a member's failure without passing the loss on, so it collects initial margin against potential future
 exposure and variation margin against today's moves, backed by a default fund and a waterfall specifying whose
-money is consumed in what order. The arrangement is extraordinarily effective and not free — as §6's opening
-examples show, the same machinery that let Lehman's cleared book be auctioned off in weeks is the machinery
-whose margin call forced brokers to restrict buying in January 2021.
-<span class="snref"></span>
-<span class="sn">This is the quiet argument for shortening the settlement cycle. Margin scales with the exposure
-horizon; halve the horizon and you roughly halve what the CCP must demand when volatility spikes. T+1 was not
-primarily a convenience measure.</span>
+money is consumed in what order. Netting then does the arithmetic: well over 90% of gross obligations
+disappear, and a member who bought a million and sold nine hundred thousand of the same CUSIP across hundreds
+of trades settles one delivery of a hundred thousand.
 </p>
 
 <p>
-Clearing is the great risk-compression step, and its value is easiest to see on the days it was tested. When
-Lehman Brothers failed in September 2008, its cleared interest-rate book at LCH — some $9 trillion notional
-across tens of thousands of trades — was hedged and auctioned off within weeks, using only a fraction of the
-margin Lehman had posted; the bilateral, uncleared exposures took years of litigation to untangle. And in
+The arrangement is extraordinarily effective, and it is not free — the same machinery produces both of its
+famous days. When Lehman Brothers failed in September 2008, its cleared interest-rate book at LCH, some $9
+trillion notional across tens of thousands of trades, was hedged and auctioned within weeks using a fraction of
+the margin Lehman had posted; the uncleared bilateral exposures took years of litigation to untangle. And in
 January 2021, when a crowd of retail traders ran GameStop vertical, it was the NSCC's margin call — billions of
-dollars, demanded of brokers before that morning's open, against two further days of settlement exposure under
-the then-standard T+2 — that forced Robinhood and others to restrict buying. The mechanics: novation replaces a
-web of bilateral exposures with exposures to a single central counterparty, collateralised by margin;
-continuous net settlement then collapses gross obligations by well over 90% — a member who bought 1M and sold
-900k of the same CUSIP across hundreds of trades settles a single net delivery of 100k.
+dollars, demanded of brokers before the open, against two further days of settlement exposure under the
+then-standard T+2 — that forced Robinhood and others to restrict buying. Clearing absorbed a systemic default
+in the first case and transmitted a liquidity shock in the second, by the same mechanism working exactly as
+designed.
 <span class="snref"></span>
-<span class="sn">The GameStop margin spiral is a direct cause of T+1: halving the settlement window roughly
-halves the CCP's exposure horizon and hence the margin it must demand in a squeeze. The industry compressed the
-cycle in May 2024 largely so that January 2021 could not repeat at the same scale.</span>
+<span class="sn">Which is the quiet argument for shortening the settlement cycle, and the direct line from
+January 2021 to May 2024. Margin scales with the exposure horizon; halve the horizon and you roughly halve what
+the CCP must demand when volatility spikes. T+1 was not primarily a convenience measure.</span>
 </p>
 
 
@@ -2273,7 +2535,7 @@ cycle in May 2024 largely so that January 2021 could not repeat at the same scal
   <text x="786" y="324" fill="#918e86" font-size="11">to physically move, and the risk while it does.</text>
   <text x="786" y="348" fill="#7fb069" font-size="11">Gross 1,900k → net 100k. Over 90% compressed.</text>
 </svg>
-<figcaption>Fig. 10 — The two compressions that define post-trade. Panel 1 is the world without a clearing
+<figcaption>Fig. 11 — The two compressions that define post-trade. Panel 1 is the world without a clearing
 house: every trade is a bilateral promise to a named counterparty, and the total exposure is the sum of all of
 them for as long as settlement takes. Panel 2 is <em>novation</em> — the legal substitution by which one trade
 between you and B becomes two trades, you-to-CCP and CCP-to-B. The economics are untouched; what changes is who
@@ -2374,10 +2636,10 @@ disk rather than by memory, which turns "replay a hundred terabytes" from an arc
 storage one.
 <span class="snref"></span>
 <span class="sn">Chronicle's own framing is a "record everything" queue behaving as a broker-less, durable,
-persisted JVM topic — under a microsecond between JVMs on one machine, under ten across machines with
-Enterprise replication. The Enterprise line adds TCP replication for HA/DR, encryption, an Async Mode buffer
-that flattens tail latency under sustained load, and binary-compatible Java, C++, Rust and Python libraries
-reading the same files.</span>
+persisted JVM topic. The Enterprise line adds TCP replication for HA/DR, encryption, an Async Mode buffer that
+flattens tail latency under sustained load, and binary-compatible Java, C++, Rust and Python libraries reading
+the same files — a Python research process and a C++ execution process on one queue, with no translation layer
+between them.</span>
 </p>
 
 <figure class="fw" id="fig-queue">
@@ -2459,7 +2721,7 @@ reading the same files.</span>
   <text x="10" y="370" font-size="12.5" fill="#918e86">What is <tspan fill="#c0665e">not</tspan> in this picture is the design: no broker process · no network hop on the local path · no object graph for the GC to scan ·</text>
   <text x="10" y="389" font-size="12.5" fill="#918e86">no backpressure from reader to writer · no size ceiling short of the disk.</text>
 </svg>
-<figcaption>Fig. 11 — Chronicle Queue, in full. A queue is a directory of memory-mapped files — one per roll
+<figcaption>Fig. 12 — Chronicle Queue, in full. A queue is a directory of memory-mapped files — one per roll
 cycle, conventionally a day — into which an appender writes excerpts and never rewrites them. Because the file
 is mapped rather than brokered, every reader in every process is looking at the same bytes the writer just
 produced, with no copy and no hop. Tailers are independent: one sits at the head feeding a live strategy,
@@ -2540,7 +2802,7 @@ letting the consumer read several — queues are cheap.</span>
 
   <text x="10" y="285" font-size="12" fill="#6b6963" font-style="italic">Latency budget: ~1 µs per FIX parse, sub-µs per queue hop — a full gateway-to-venue traversal in the tens of microseconds.</text>
 </svg>
-<figcaption>Fig. 12 — An order path built on Chronicle. Each blue box is a deliberately boring single-threaded
+<figcaption>Fig. 13 — An order path built on Chronicle. Each blue box is a deliberately boring single-threaded
 Java service; each amber Q is a Chronicle Queue — an append-only, memory-mapped log written once and tailed by
 anyone. The pipeline is the EMS of Figure 1 turned inside out: instead of one monolith holding state, the state
 <em>is</em> the sequence of messages on the queues, and every service is a replayable fold over them. The grey
@@ -2675,7 +2937,7 @@ the method names did not.</span>
   <path d="M 940 268 C 900 360 700 372 527 348" stroke="#7fb069" stroke-width="1.5" fill="none" stroke-dasharray="4 4" marker-end="url(#ar9)"/>
   <text x="740" y="392" fill="#7fb069" font-size="11.5" text-anchor="middle" class="m">sentTailer advances only once kdb+ has the batch — the commit point</text>
 </svg>
-<figcaption>Fig. 13 — The adapter, and the seam it covers. On the left the Java world writes one self-describing
+<figcaption>Fig. 14 — The adapter, and the seam it covers. On the left the Java world writes one self-describing
 message at a time into a memory-mapped file; on the right kdb+ wants columns, in bulk, through
 <code>.u.upd</code>. The adapter is the impedance match. A <em>named</em> tailer (1) reads forward and, because
 it is named, resumes at the last index it reached rather than at the start of the file. Each excerpt is
@@ -3016,6 +3278,24 @@ decisions.
 </table>
 
 <p>
+The convergence has a practical form worth tabulating, because it is the dictionary for reading all three
+papers at once. Every object in the execution hierarchy has a representation on the wire, in the queue, and in
+the database — and they are not always named the same thing.
+</p>
+
+<table class="fw-table">
+<thead><tr><th>Lifecycle entity</th><th>On the FIX wire</th><th>In Chronicle</th><th>In kdb+</th><th>Measured by</th></tr></thead>
+<tbody>
+<tr><td>Parent order</td><td><code>35=D</code> NewOrderSingle</td><td>Excerpt on the inbound order queue</td><td><code>ord</code> row, <code>poid = oid</code></td><td>Arrival slippage · implementation shortfall</td></tr>
+<tr><td>Algo order</td><td>Internal, or <code>35=D</code> to the broker</td><td>Excerpt emitted by the algo container</td><td><code>ord</code> row, <code>poid ≠ oid</code></td><td>Schedule adherence · participation drift</td></tr>
+<tr><td>Placement</td><td><code>35=D</code>/<code>F</code>/<code>G</code> to the venue</td><td>Excerpt on the venue-gateway queue</td><td><code>place</code> row, keyed by <code>coid</code></td><td>Queue position · spread paid · OFI at place</td></tr>
+<tr><td>Fill</td><td><code>35=8</code>, <code>ExecType=F</code></td><td>Excerpt on the execution-report queue</td><td><code>execs</code> row, keyed by <code>execid</code></td><td>Effective spread · markouts by venue and <code>liq</code></td></tr>
+<tr><td>Trade (allocated)</td><td><code>35=J</code> Allocation, <code>35=AK</code> Confirmation</td><td>Excerpt on the post-trade queue</td><td><code>alloc</code> row, by account</td><td>Same-day allocation · affirmation rate</td></tr>
+<tr><td>Settled position</td><td>—</td><td>—</td><td>Position table, reconciled to custodian</td><td>Settlement efficiency · fail rate</td></tr>
+</tbody>
+</table>
+
+<p>
 The convergence is not a coincidence so much as an admission: any system that must answer <em>what happened,
 exactly, and in what order</em> after the fact is forced into the same shape. Write the events down once, in
 order, and never edit them; treat every view as a fold you can recompute; make the consumer idempotent, because
@@ -3080,7 +3360,7 @@ queries.</span>
 
   <text x="60" y="262" fill="#918e86" font-size="11.5">Score a fill against a quote stamped with the wrong clock and the number is silently false.</text>
 </svg>
-<figcaption>Fig. 14 — The five clocks, and which belongs to which question. A single fill carries more than one
+<figcaption>Fig. 15 — The five clocks, and which belongs to which question. A single fill carries more than one
 timestamp, and conflating them is the quietest way to produce a benchmark that is arithmetically perfect and
 practically meaningless. <code>t_decision</code> is where the arrival mid is read — the reference for
 implementation shortfall. <code>t_place</code> is where book state and order-flow imbalance must be captured,
@@ -3181,7 +3461,7 @@ on <code>execid</code> makes both session-level resends and TP log replays safe 
   <text x="452" y="276" font-size="10.5" fill="#918e86" class="m" text-anchor="middle">subscriber</text>
   <text x="200" y="412" font-size="12" fill="#6b6963" font-style="italic">The plant has exactly one slow consumer — the chain — and the chain has no log to write, so it drains at memory speed whatever TCA does behind it.</text>
 </svg>
-<figcaption>Fig. 15 — Order flow as a first-class tickerplant feed, with TCA quarantined. Two feed handlers
+<figcaption>Fig. 16 — Order flow as a first-class tickerplant feed, with TCA quarantined. Two feed handlers
 normalise the outside world into schema'd rows: the FIX gateway parses ExecutionReports into
 <code>execs</code>, the market-data handler publishes <code>quote</code> and <code>trade</code>. The
 tickerplant does exactly two things — append every message to its log, then publish to subscribers
@@ -3210,14 +3490,18 @@ immutable events and every view of it is a fold — is either true of your schem
 <a href="https://rohanshiloh.github.io/exec-tca-stack/#tables">four-table contract</a> —
 <code>quote</code>, <code>trade</code>, <code>ord</code>, <code>execs</code> — each opening with
 <code>time</code> then <code>sym</code> so <code>tick.q</code> accepts it. Matching the shape is what
-lets the two documents describe one system. Its <a href="https://rohanshiloh.github.io/exec-tca-stack/#formulas">formulas page</a> sets each benchmark
+lets the two documents describe one system. Part Two spells the identifiers out in full across separate tables
+— <code>parentOrderID</code>, <code>algoOrderID</code>, <code>childOrderID</code>, <code>execID</code> — where
+this paper abbreviates them on a self-referencing <code>ord</code> (<code>poid</code>, <code>oid</code>,
+<code>coid</code>, <code>execid</code>). Same four levels, same lineage; open <code>sym.q</code> expecting the
+long spellings. Its <a href="https://rohanshiloh.github.io/exec-tca-stack/#formulas">formulas page</a> sets each benchmark
 beside the q it becomes — they are the same length, which is the whole argument for the stack.</span>
 </p>
 
 <pre><code><span class="q-c">/ immutable event stream — every ExecutionReport, order- and trade-lifecycle alike.</span>
 <span class="q-c">/ NB: `exec` is a q keyword — exec:([]...) is a parse error — hence execs.</span>
 <span class="q-c">/ Likewise `fills` is reserved in KDB-X — use nFills in any scorecard.</span>
-execs:([] time:`timestamp$(); sym:`$(); oid:`$(); poid:`$(); execid:`$();
+execs:([] time:`timestamp$(); sym:`$(); oid:`$(); poid:`$(); coid:`$(); execid:`$();
   execType:`char$(); ordStatus:`char$(); side:`char$();
   lastQty:`long$(); lastPx:`float$(); cumQty:`long$(); leaves:`long$();
   avgPx:`float$(); venue:`$();
@@ -3413,5 +3697,31 @@ whitepapers, <a href="https://code.kx.com/q/architecture/">code.kx.com/q/archite
 
 </main>
 </div>
+<script>
+(function () {
+  var r = document.documentElement;
+  var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+  function apply(pref) {
+    var resolved = pref === 'auto' ? (mq && mq.matches ? 'dark' : 'light') : pref;
+    r.setAttribute('data-pref', pref);
+    r.setAttribute('data-theme', resolved);
+    try { localStorage.setItem('otl-theme', pref); } catch (e) {}
+  }
+
+  document.querySelectorAll('.themebar button').forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.getAttribute('data-set')); });
+  });
+
+  // follow the system while the preference is auto
+  if (mq) {
+    var onChange = function () {
+      if (r.getAttribute('data-pref') === 'auto') apply('auto');
+    };
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else if (mq.addListener) mq.addListener(onChange);
+  }
+})();
+</script>
 </body>
 </html>
