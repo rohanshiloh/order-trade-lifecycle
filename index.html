@@ -153,7 +153,24 @@
     margin: 1.3rem 0;
   }
   pre code { background: none; padding: 0; color: var(--ink); font-size: 1em; }
-  pre .q-c { color: var(--ink-faint); font-style: italic; }
+
+  /* ---- q syntax palette ---- */
+  pre .q-c,  .q-c  { color: var(--ink-faint); font-style: italic; }
+  pre .q-op, .q-op { color: #4ec9b0; font-weight: 600; }   /* operators, iterators */
+  pre .q-br, .q-br { color: #8a8780; }                      /* brackets, separators */
+  pre .q-sym,.q-sym{ color: #c08bd8; }                      /* `symbols */
+  pre .q-str,.q-str{ color: #7fb069; }                      /* strings */
+  pre .q-num,.q-num{ color: #d4914e; }                      /* numbers */
+  pre .q-kw, .q-kw { color: #7aa9d6; font-weight: 600; }    /* keywords */
+  pre .q-ns, .q-ns { color: #b3a8e0; }                      /* .namespaced names */
+
+  [data-theme="light"] pre .q-op, [data-theme="light"] .q-op { color: #0a7a68; }
+  [data-theme="light"] pre .q-br, [data-theme="light"] .q-br { color: #8b877e; }
+  [data-theme="light"] pre .q-sym,[data-theme="light"] .q-sym{ color: #7b3fa0; }
+  [data-theme="light"] pre .q-str,[data-theme="light"] .q-str{ color: #386627; }
+  [data-theme="light"] pre .q-num,[data-theme="light"] .q-num{ color: #a8601a; }
+  [data-theme="light"] pre .q-kw, [data-theme="light"] .q-kw { color: #245a8a; }
+  [data-theme="light"] pre .q-ns, [data-theme="light"] .q-ns { color: #5a4a9c; }
   pre .q-k { color: var(--accent); }
   pre .q-s { color: var(--green); }
 
@@ -587,7 +604,7 @@ this same seam.
   <line x1="10" y1="228" x2="1140" y2="228" stroke="#2a2e36" stroke-dasharray="4 5"/>
 
   <line x1="325" y1="176" x2="325" y2="292" stroke="#7aa9d6" stroke-width="1.4" marker-end="url(#arb)"/>
-  <text x="337" y="222" font-size="10.5" fill="#7aa9d6" class="m">booked fills</text>
+  <text x="337" y="252" font-size="10.5" fill="#7aa9d6" class="m">booked fills</text>
 
   <text x="10" y="266" fill="#6b6963" font-size="12.5" letter-spacing="2">TRADE LIFECYCLE · MIDDLE / BACK OFFICE · HOURS – T+1</text>
 
@@ -3074,11 +3091,11 @@ cd ~/code/kdb-chronicle-queue/Adapter  &amp;&amp; ./mvnw spring-boot:run</code><
     <h4>Check it's up</h4>
     <p>The tables should exist and be empty, and the Producer should be answering on :9090. The adapter logs
     the index its tailer starts from — that number is the proof the named tailer resumed rather than rewound.</p>
-<pre><code>q)quote
+<pre><code><span class="q-br">q)</span>quote
 time chrontime sym bid bsize ask asize bex aex
 ----------------------------------------------
 
-curl -s -o /dev/null -w '%{http_code}\n' http://localhost:9090/producer/swagger-ui.html
+curl -s -o /dev/null -w &#x27;%{http_code}\n&#x27; http://localhost:9090/producer/swagger-ui.html
 
 <span class="q-c"># adapter log:  Tailer starting at index: 80148384825736</span></code></pre>
   </div>
@@ -3105,14 +3122,14 @@ curl -s -o /dev/null -w '%{http_code}\n' http://localhost:9090/producer/swagger-
     <p>Rows should be arriving in envelope-sized bursts. The last query is the one worth running twice: the
     <code>quote</code> table carries two timestamps, so their difference is the end-to-end latency of the whole
     path — queue, adapter, IPC, insert.</p>
-<pre><code>h:hopen `::5000
+<pre><code>h<span class="q-op">:</span><span class="q-kw">hopen</span> <span class="q-sym">`::5000</span>
 
-h"count quote"                                  <span class="q-c">/ rows arriving</span>
-h"-10#quote"                                    <span class="q-c">/ the tail</span>
-h"select cnt:count i by sym from quote"         <span class="q-c">/ shard check</span>
+h<span class="q-str">"</span><span class="q-kw">count</span> quote<span class="q-str">"</span>                                  <span class="q-c">/ rows arriving</span>
+h<span class="q-str">"</span><span class="q-op">-</span><span class="q-num">10</span><span class="q-op">#</span>quote<span class="q-str">"</span>                                    <span class="q-c">/ the tail</span>
+h<span class="q-str">"</span><span class="q-kw">select</span> cnt<span class="q-op">:</span><span class="q-kw">count</span> i <span class="q-kw">by</span> sym <span class="q-kw">from</span> quote<span class="q-str">"</span>         <span class="q-c">/ shard check</span>
 
-<span class="q-c">/ chrontime is stamped by the Producer, time by kdb+ on insert</span>
-h"select avg (`long$time) - `long$chrontime from quote"</code></pre>
+/ chrontime is stamped by the Producer, time by kdb+ on insert
+h<span class="q-str">"</span><span class="q-kw">select</span> <span class="q-kw">avg</span> <span class="q-br">(</span><span class="q-sym">`long</span><span class="q-op">$</span>time<span class="q-br">)</span> <span class="q-op">-</span> <span class="q-sym">`long</span><span class="q-op">$</span>chrontime <span class="q-kw">from</span> quote<span class="q-str">"</span></code></pre>
   </div>
 </div>
 
@@ -3501,21 +3518,21 @@ beside the q it becomes — they are the same length, which is the whole argumen
 <pre><code><span class="q-c">/ immutable event stream — every ExecutionReport, order- and trade-lifecycle alike.</span>
 <span class="q-c">/ NB: `exec` is a q keyword — exec:([]...) is a parse error — hence execs.</span>
 <span class="q-c">/ Likewise `fills` is reserved in KDB-X — use nFills in any scorecard.</span>
-execs:([] time:`timestamp$(); sym:`$(); oid:`$(); poid:`$(); coid:`$(); execid:`$();
-  execType:`char$(); ordStatus:`char$(); side:`char$();
-  lastQty:`long$(); lastPx:`float$(); cumQty:`long$(); leaves:`long$();
-  avgPx:`float$(); venue:`$();
-  liq:`char$());        <span class="q-c">/ "R" removed lit · "A" added lit · "M" dark mid · "I" internalised</span>
+execs<span class="q-op">:</span><span class="q-br">(</span><span class="q-br">[</span><span class="q-br">]</span> time<span class="q-op">:</span><span class="q-sym">`timestamp</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> sym<span class="q-op">:</span><span class="q-sym">`</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> oid<span class="q-op">:</span><span class="q-sym">`</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> poid<span class="q-op">:</span><span class="q-sym">`</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> coid<span class="q-op">:</span><span class="q-sym">`</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> execid<span class="q-op">:</span><span class="q-sym">`</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span>
+  execType<span class="q-op">:</span><span class="q-sym">`char</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> ordStatus<span class="q-op">:</span><span class="q-sym">`char</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> side<span class="q-op">:</span><span class="q-sym">`char</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span>
+  lastQty<span class="q-op">:</span><span class="q-sym">`long</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> lastPx<span class="q-op">:</span><span class="q-sym">`float</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> cumQty<span class="q-op">:</span><span class="q-sym">`long</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> leaves<span class="q-op">:</span><span class="q-sym">`long</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span>
+  avgPx<span class="q-op">:</span><span class="q-sym">`float</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> venue<span class="q-op">:</span><span class="q-sym">`</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span>
+  liq<span class="q-op">:</span><span class="q-sym">`char</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">)</span><span class="q-br">;</span>        <span class="q-c">/ &quot;R&quot; removed lit · &quot;A&quot; added lit · &quot;M&quot; dark mid · &quot;I&quot; internalised</span>
 
 
 <span class="q-c">/ derived: current order state, keyed by order id — rebuilt by folding execs</span>
-ord:([oid:`$()] poid:`$(); sym:`$(); side:`char$(); qty:`long$();
-  cumQty:`long$(); leaves:`long$(); avgPx:`float$();
-  status:`char$(); updTime:`timestamp$());
+ord<span class="q-op">:</span><span class="q-br">(</span><span class="q-br">[</span>oid<span class="q-op">:</span><span class="q-sym">`</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">]</span> poid<span class="q-op">:</span><span class="q-sym">`</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> sym<span class="q-op">:</span><span class="q-sym">`</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> side<span class="q-op">:</span><span class="q-sym">`char</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> qty<span class="q-op">:</span><span class="q-sym">`long</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span>
+  cumQty<span class="q-op">:</span><span class="q-sym">`long</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> leaves<span class="q-op">:</span><span class="q-sym">`long</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> avgPx<span class="q-op">:</span><span class="q-sym">`float</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span>
+  status<span class="q-op">:</span><span class="q-sym">`char</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">;</span> updTime<span class="q-op">:</span><span class="q-sym">`timestamp</span><span class="q-op">$</span><span class="q-br">(</span><span class="q-br">)</span><span class="q-br">)</span><span class="q-br">;</span>
 
 <span class="q-c">/ the four levels of Fig. 3 live in two tables, not four:</span>
 <span class="q-c">/   parent    → ord where poid = oid        (it is its own parent)</span>
-<span class="q-c">/   algoChild → ord where poid &lt;&gt; oid       (the engine's decision)</span>
+<span class="q-c">/   algoChild → ord where poid &lt;&gt; oid       (the engine&#x27;s decision)</span>
 <span class="q-c">/   placement → place, keyed by coid, carrying oid of its algoChild</span>
 <span class="q-c">/   fill      → execs, carrying both coid and oid</span>
 <span class="q-c">/ Rollup at any level is then a group-by, never a join.</span></code></pre>
